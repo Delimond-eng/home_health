@@ -5,7 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class ScheduleTile extends StatelessWidget {
-  const ScheduleTile({super.key, required this.isLast});
+  final Schedule item;
+  const ScheduleTile({super.key, required this.isLast, required this.item});
   final bool isLast;
 
   @override
@@ -57,9 +58,9 @@ class ScheduleTile extends StatelessWidget {
                   const SizedBox(
                     width: 10.0,
                   ),
-                  const Flexible(
+                  Flexible(
                     child: Text(
-                      "Lorem ipsum dolorem ",
+                      item.title!,
                       style: TextStyle(
                         color: Colors.white,
                         fontFamily: 'Poppins',
@@ -78,10 +79,10 @@ class ScheduleTile extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    "sit amet consectetur adipisicing elit. Asperiores...",
+                    item.desc!,
                     style: TextStyle(
                       color: Colors.grey.shade200,
-                      fontSize: 12.0,
+                      fontSize: 10.0,
                       fontFamily: 'Poppins',
                       fontWeight: FontWeight.w400,
                     ),
@@ -94,11 +95,11 @@ class ScheduleTile extends StatelessWidget {
                       borderRadius: BorderRadius.circular(5.0),
                       color: Colors.grey.shade50.withOpacity(.6),
                     ),
-                    child: const Padding(
-                      padding: EdgeInsets.all(5),
+                    child: Padding(
+                      padding: const EdgeInsets.all(5),
                       child: Row(
                         children: [
-                          Icon(
+                          const Icon(
                             CupertinoIcons.clock,
                             size: 15.0,
                           ),
@@ -106,7 +107,7 @@ class ScheduleTile extends StatelessWidget {
                             width: 5.0,
                           ),
                           Text(
-                            "Lundi, 09 Fev. 2023 de 11:20 - 13:30",
+                            item.dateHour!,
                             style: TextStyle(
                               color: Colors.black,
                               fontFamily: 'Poppins',
@@ -126,4 +127,11 @@ class ScheduleTile extends StatelessWidget {
       ),
     );
   }
+}
+
+class Schedule {
+  String? title;
+  String? desc;
+  String? dateHour;
+  Schedule({this.title, this.desc, this.dateHour});
 }

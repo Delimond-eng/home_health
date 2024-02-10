@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:home_health/views/pages/patient_traitment_page.dart';
 
 class MedicDocItem extends StatelessWidget {
   final Color statusColor;
@@ -200,7 +201,14 @@ class MedicDocItemList extends StatelessWidget {
               borderRadius: BorderRadius.circular(8.0),
               child: InkWell(
                 borderRadius: BorderRadius.circular(8.0),
-                onTap: () {},
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const PatientTraitmentPage(),
+                    ),
+                  );
+                },
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Column(

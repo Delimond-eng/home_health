@@ -39,6 +39,28 @@ class _HomeScreenState extends State<HomeScreen> {
         nom: "Lionnel Nawej",
         dateHour: "01 Fév 2024 12:30"),
   ];
+
+  List<Schedule> schedules = [
+    Schedule(
+        title: "Préparation matinale",
+        desc:
+            "Rassembler le matériel médical nécessaire;Vérifier les dossiers des patients prévus pour la journée !",
+        dateHour: "04 Fév 2024 08:30"),
+    Schedule(
+        title: "Visite chez Mme. Dupont",
+        desc:
+            "Administration de médicaments;Contrôle de la pression artérielle!",
+        dateHour: "03 Fév 2024 12:30"),
+    Schedule(
+        title: "Déplacement vers le domicile de M. Martin",
+        desc:
+            "Prise en charge des soins de plaies;Mise à jour des dossiers électroniques!",
+        dateHour: "05 Fév 2024 11:30"),
+    Schedule(
+        title: "Visite chez Mme. Garcia",
+        desc: "Surveillance de la glycémie;Conseils sur la gestion du diabète!",
+        dateHour: "08 Fév 2024 14:30"),
+  ];
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
@@ -75,8 +97,11 @@ class _HomeScreenState extends State<HomeScreen> {
                             horizontal: 8.0, vertical: 10.0),
                         child: Row(
                           children: [
-                            for (int i = 0; i < 3; i++) ...[
-                              ScheduleTile(isLast: i == 2),
+                            for (int i = 0; i < schedules.length; i++) ...[
+                              ScheduleTile(
+                                isLast: i == schedules.length - 1,
+                                item: schedules[i],
+                              ),
                             ],
                           ],
                         ),

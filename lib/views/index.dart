@@ -17,6 +17,9 @@ class _MainHomeState extends State<MainHome> {
       child: Text("Schedule"),
     ),
     const Center(
+      child: Text("Reports"),
+    ),
+    const Center(
       child: Text("Profil"),
     ),
   ];
@@ -54,6 +57,10 @@ class _MainHomeState extends State<MainHome> {
           BottomNavigationBarItem(
             icon: SvgPicture.asset("assets/svg/calendarr.svg", height: 22.0),
             label: "Agenda",
+          ),
+          BottomNavigationBarItem(
+            icon: SvgPicture.asset("assets/svg/chart-square.svg", height: 22.0),
+            label: "Rapports",
           ),
           BottomNavigationBarItem(
             icon: SvgPicture.asset("assets/svg/profile.svg"),
