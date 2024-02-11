@@ -30,6 +30,7 @@ dependencies:
   avatar_glow: ^3.0.1
   expandable: ^5.0.1
   enhance_stepper: ^0.1.1
+  flutter_launcher_icons: ^0.13.1
 
 dev_dependencies:
   flutter_test:

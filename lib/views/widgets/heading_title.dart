@@ -4,16 +4,13 @@ import 'package:flutter/material.dart';
 class HeadingTitle extends StatelessWidget {
   final String title;
   final MaterialColor? color;
-  final bool? withActionBtn;
-  final IconData? actionBtnIcon;
-  final Function? onActionBtnPressed;
-  const HeadingTitle(
-      {super.key,
-      required this.title,
-      this.color,
-      this.withActionBtn = false,
-      this.actionBtnIcon = Icons.circle,
-      this.onActionBtnPressed});
+  final Widget? actionChild;
+  const HeadingTitle({
+    super.key,
+    required this.title,
+    this.color,
+    this.actionChild,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -58,38 +55,7 @@ class HeadingTitle extends StatelessWidget {
               ),
             ],
           ),
-          if (withActionBtn == true) ...[
-            Container(
-              height: 35.0,
-              width: 35.0,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(35.0),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(.1),
-                    blurRadius: 8.0,
-                    offset: const Offset(0, 3),
-                  )
-                ],
-              ),
-              child: Material(
-                borderRadius: BorderRadius.circular(35.0),
-                color: Colors.transparent,
-                child: InkWell(
-                  borderRadius: BorderRadius.circular(35.0),
-                  onTap: () => onActionBtnPressed!,
-                  child: Center(
-                    child: Icon(
-                      actionBtnIcon!,
-                      color: Colors.grey.shade600,
-                      size: 18.0,
-                    ),
-                  ),
-                ),
-              ),
-            )
-          ]
+          if (actionChild != null) ...[actionChild!]
         ],
       ),
     );

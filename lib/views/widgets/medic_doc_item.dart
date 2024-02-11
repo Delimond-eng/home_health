@@ -1,160 +1,7 @@
-import 'dart:math';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:home_health/views/pages/patient_traitment_page.dart';
-
-class MedicDocItem extends StatelessWidget {
-  final Color statusColor;
-  const MedicDocItem({
-    super.key,
-    required this.statusColor,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Stack(
-      clipBehavior: Clip.none,
-      children: [
-        Container(
-          height: MediaQuery.of(context).size.height,
-          width: MediaQuery.of(context).size.width,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(5.0),
-            image: const DecorationImage(
-              image: AssetImage("assets/imgs/shape-bg-1.jpg"),
-              alignment: Alignment.center,
-              fit: BoxFit.cover,
-            ),
-          ),
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(5),
-              gradient: LinearGradient(
-                colors: [Colors.white, Colors.indigo.shade100.withOpacity(.8)],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-            ),
-            child: Material(
-              borderRadius: BorderRadius.circular(5.0),
-              color: Colors.transparent,
-              child: InkWell(
-                borderRadius: BorderRadius.circular(5.0),
-                onTap: () {},
-                child: Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Align(
-                        alignment: Alignment.topRight,
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                          child: SvgPicture.asset(
-                            "assets/svg/svg-3.svg",
-                            // ignore: deprecated_member_use
-                            color: Colors.indigo,
-                            height: 60.0,
-                            width: 60.0,
-                          ),
-                        ),
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          const Text(
-                            "Plainte",
-                            style: TextStyle(
-                              fontFamily: 'Poppins',
-                              fontWeight: FontWeight.w800,
-                              color: Colors.black,
-                              fontSize: 10.0,
-                            ),
-                          ),
-                          Text(
-                            "Lorem Ipsum dolorem...",
-                            style: TextStyle(
-                              fontFamily: 'Poppins',
-                              fontWeight: FontWeight.w500,
-                              color: Colors.grey[700],
-                              fontSize: 13.0,
-                            ),
-                          ),
-                          const Padding(
-                            padding: EdgeInsets.all(5),
-                            child: Row(
-                              children: [
-                                Icon(
-                                  CupertinoIcons.clock,
-                                  size: 15.0,
-                                  color: Colors.indigo,
-                                ),
-                                SizedBox(
-                                  width: 5.0,
-                                ),
-                                Text(
-                                  "09 Fev. 2023, 11:20",
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontFamily: 'Poppins',
-                                    fontSize: 10,
-                                    fontWeight: FontWeight.w900,
-                                  ),
-                                )
-                              ],
-                            ),
-                          )
-                        ],
-                      )
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ),
-        Positioned(
-          top: 0,
-          left: 10.0,
-          child: Column(
-            children: [
-              Container(
-                height: 5.0,
-                width: 3.0,
-                color: Colors.indigo.shade100,
-              ),
-              Container(
-                  height: 10.0,
-                  width: 60.0,
-                  decoration: BoxDecoration(
-                    color: Colors.indigo.shade100,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Container(
-                        height: 15.0,
-                        width: 33.0,
-                        margin: const EdgeInsets.all(3.0),
-                        decoration: BoxDecoration(
-                          color: statusColor,
-                          borderRadius: BorderRadius.circular(15.0),
-                        ),
-                      ),
-                    ],
-                  )),
-            ],
-          ),
-        )
-      ],
-    );
-  }
-}
 
 class MedicDocItemList extends StatelessWidget {
   final Patient item;
@@ -205,7 +52,9 @@ class MedicDocItemList extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const PatientTraitmentPage(),
+                      builder: (context) => PatientTraitmentPage(
+                        soins: item.soins!,
+                      ),
                     ),
                   );
                 },
@@ -271,8 +120,9 @@ class MedicDocItemList extends StatelessWidget {
                               Flexible(
                                 child: Text(
                                   item.adresse!,
+                                  textScaleFactor: .8,
                                   style: TextStyle(
-                                    fontSize: 10.0,
+                                    fontSize: 14.0,
                                     color: Colors.grey.shade800,
                                     fontWeight: FontWeight.w500,
                                   ),
@@ -415,5 +265,12 @@ class Patient {
   String? nom;
   String? adresse, dateHour;
   Color? color;
-  Patient({this.nom, this.adresse, this.color, this.dateHour});
+  List<Soin>? soins;
+  Patient({this.nom, this.adresse, this.color, this.dateHour, this.soins});
+}
+
+class Soin {
+  String? libelle;
+  bool selected = false;
+  Soin({this.libelle});
 }
