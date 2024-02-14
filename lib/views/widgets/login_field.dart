@@ -21,12 +21,11 @@ class LoginField extends StatelessWidget {
       height: 50.0,
       width: MediaQuery.of(context).size.width,
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(.4),
-        borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(5.0),
-          bottomLeft: Radius.circular(30.0),
-          bottomRight: Radius.circular(30.0),
-          topRight: Radius.circular(30.0),
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(5.0),
+        border: Border.all(
+          color: Colors.grey.shade300,
+          width: 1,
         ),
       ),
       child: Padding(
@@ -40,9 +39,9 @@ class LoginField extends StatelessWidget {
                   children: [
                     SvgPicture.asset(
                       "assets/svg/$icon.svg",
-                      height: 22.0,
-                      colorFilter:
-                          const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+                      height: 18.0,
+                      colorFilter: const ColorFilter.mode(
+                          Colors.indigo, BlendMode.srcIn),
                     ),
                     const SizedBox(width: 5.0),
                     if (isPassword) ...[
@@ -53,7 +52,7 @@ class LoginField extends StatelessWidget {
                           style: const TextStyle(
                             fontFamily: 'Poppins',
                             fontSize: 14.0,
-                            color: Colors.white,
+                            color: Colors.black,
                             fontWeight: FontWeight.w500,
                           ),
                           decoration: InputDecoration(
@@ -61,9 +60,9 @@ class LoginField extends StatelessWidget {
                             enabledBorder: InputBorder.none,
                             focusedBorder: InputBorder.none,
                             hintText: hintText,
-                            hintStyle: TextStyle(
-                              color: Colors.grey.shade100,
-                              fontSize: 12.0,
+                            hintStyle: const TextStyle(
+                              color: Colors.grey,
+                              fontSize: 14.0,
                               fontWeight: FontWeight.w400,
                             ),
                             counterText: '',
@@ -79,7 +78,7 @@ class LoginField extends StatelessWidget {
                           style: const TextStyle(
                             fontFamily: 'Poppins',
                             fontSize: 14.0,
-                            color: Colors.white,
+                            color: Colors.black,
                             fontWeight: FontWeight.w500,
                           ),
                           decoration: InputDecoration(
@@ -87,9 +86,9 @@ class LoginField extends StatelessWidget {
                             enabledBorder: InputBorder.none,
                             focusedBorder: InputBorder.none,
                             hintText: hintText,
-                            hintStyle: TextStyle(
-                              color: Colors.grey.shade100,
-                              fontSize: 12.0,
+                            hintStyle: const TextStyle(
+                              color: Colors.grey,
+                              fontSize: 14.0,
                               fontWeight: FontWeight.w400,
                             ),
                             counterText: '',
@@ -113,7 +112,7 @@ class LoginField extends StatelessWidget {
                         : "assets/svg/eye-alt.svg",
                     height: 20.0,
                     colorFilter:
-                        const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+                        const ColorFilter.mode(Colors.black, BlendMode.srcIn),
                   ),
                 )
               ]

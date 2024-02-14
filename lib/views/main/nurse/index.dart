@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import './screens/home_screen.dart';
+import '../../pages/home_nurse_page.dart';
+import 'package:animate_do/animate_do.dart';
 
 class MainHome extends StatefulWidget {
   const MainHome({super.key});
@@ -14,7 +15,7 @@ class _MainHomeState extends State<MainHome> {
   final List<Widget> _pages = [
     const HomeScreen(),
     const Center(
-      child: Text("Schedule"),
+      child: Text("Visites faites"),
     ),
     const Center(
       child: Text("Reports"),
@@ -52,18 +53,47 @@ class _MainHomeState extends State<MainHome> {
               "assets/svg/dashboard-1.svg",
               height: 22.0,
             ),
+            activeIcon: JelloIn(
+              child: SvgPicture.asset(
+                "assets/svg/dashboard-1.svg",
+                colorFilter:
+                    const ColorFilter.mode(Colors.indigo, BlendMode.srcIn),
+                height: 22.0,
+              ),
+            ),
             label: "Acceuil",
           ),
           BottomNavigationBarItem(
-            icon: SvgPicture.asset("assets/svg/calendarr.svg", height: 22.0),
-            label: "Agenda",
+            icon: SvgPicture.asset("assets/svg/check-double.svg", height: 22.0),
+            activeIcon: JelloIn(
+              child: SvgPicture.asset(
+                "assets/svg/check-double.svg",
+                height: 22.0,
+                colorFilter:
+                    const ColorFilter.mode(Colors.indigo, BlendMode.srcIn),
+              ),
+            ),
+            label: "Visites faites",
           ),
           BottomNavigationBarItem(
             icon: SvgPicture.asset("assets/svg/chart-square.svg", height: 22.0),
+            activeIcon: JelloIn(
+              child: SvgPicture.asset(
+                "assets/svg/chart-square.svg",
+                height: 22.0,
+                colorFilter:
+                    const ColorFilter.mode(Colors.indigo, BlendMode.srcIn),
+              ),
+            ),
             label: "Rapports",
           ),
           BottomNavigationBarItem(
             icon: SvgPicture.asset("assets/svg/profile.svg"),
+            activeIcon: JelloIn(
+              child: SvgPicture.asset("assets/svg/profile.svg",
+                  colorFilter:
+                      const ColorFilter.mode(Colors.indigo, BlendMode.srcIn)),
+            ),
             label: "Profil",
           ),
         ],

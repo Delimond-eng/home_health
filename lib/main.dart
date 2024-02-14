@@ -20,11 +20,13 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-          primarySwatch: Colors.blue,
-          bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-            backgroundColor: Colors.transparent,
-          ),
-          fontFamily: 'Poppins'),
+        primarySwatch: Colors.indigo,
+        bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+          backgroundColor: Colors.transparent,
+        ),
+        scaffoldBackgroundColor: const Color(0xFFeaeaea),
+        fontFamily: 'Poppins',
+      ),
       home: Builder(builder: (context) => const StartingScreen()),
     );
   }

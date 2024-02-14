@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:home_health/data/mock_data.dart';
+import 'package:home_health/utils/costum_modal.dart';
 
 import '../../models/infirmier.dart';
 import '../widgets/heading_title.dart';
@@ -46,71 +47,7 @@ class _PatientTraitmentPageState extends State<PatientTraitmentPage> {
               padding: const EdgeInsets.all(10),
               child: Column(
                 children: [
-                  Container(
-                    margin: const EdgeInsets.symmetric(
-                      horizontal: 8.0,
-                      vertical: 5,
-                    ),
-                    height: 50.0,
-                    width: MediaQuery.of(context).size.width,
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.blue, width: 1.5),
-                      borderRadius: BorderRadius.circular(10.0),
-                      color: Colors.transparent,
-                    ),
-                    child: Material(
-                      borderRadius: BorderRadius.circular(10.0),
-                      color: Colors.transparent,
-                      child: InkWell(
-                        onTap: () {
-                          showModalBottomSheet(
-                              context: context,
-                              shape: const RoundedRectangleBorder(
-                                borderRadius: BorderRadius.vertical(
-                                  top: Radius.circular(20.0),
-                                ),
-                              ),
-                              builder: (context) {
-                                for (var i in infirmiers) {
-                                  i.isSelected = false;
-                                }
-                                return infirmiersBottomSheet(context);
-                              });
-                        },
-                        borderRadius: BorderRadius.circular(5),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                            vertical: 4.0,
-                            horizontal: 8.0,
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              SvgPicture.asset(
-                                "assets/svg/transfer.svg",
-                                colorFilter: const ColorFilter.mode(
-                                  Colors.blue,
-                                  BlendMode.srcIn,
-                                ),
-                                height: 15.0,
-                              ),
-                              const SizedBox(
-                                width: 5.0,
-                              ),
-                              const Text(
-                                'Déléguer la visite à un collègue ',
-                                style: TextStyle(
-                                  fontSize: 14.0,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.blue,
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
+                  patientInfo(context),
                   Padding(
                     padding: const EdgeInsets.symmetric(
                       horizontal: 8.0,
@@ -118,71 +55,41 @@ class _PatientTraitmentPageState extends State<PatientTraitmentPage> {
                     ),
                     child: HeadingTitle(
                       title: "Soins & services prévus",
-                      actionChild: Container(
-                          height: 30.0,
-                          width: 30.0,
-                          decoration: BoxDecoration(
-                            color: Colors.indigo.shade200,
-                            borderRadius: BorderRadius.circular(5.0),
+                      actionChild: ElevatedButton.icon(
+                        onPressed: () {
+                          showAddServiceModal(context);
+                        },
+                        style: ElevatedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                          backgroundColor: Colors.blueAccent,
+                        ),
+                        label: const Text(
+                          "Ajouter",
+                          style: TextStyle(
+                            fontSize: 12.0,
+                            fontFamily: 'Poppins',
                           ),
-                          child: Material(
-                            borderRadius: BorderRadius.circular(5.0),
-                            color: Colors.transparent,
-                            child: InkWell(
-                              borderRadius: BorderRadius.circular(5.0),
-                              onTap: () {
-                                setState(() {
-                                  isSelectedAll = !isSelectedAll;
-                                  if (isSelectedAll) {
-                                    selecteds.addAll(widget.soins);
-                                    for (var s in widget.soins) {
-                                      s.selected = true;
-                                    }
-                                  } else {
-                                    selecteds = [];
-                                    for (var s in widget.soins) {
-                                      s.selected = false;
-                                    }
-                                  }
-                                });
-                              },
-                              child: isSelectedAll
-                                  ? ZoomIn(
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                          color: Colors.indigo[900],
-                                          borderRadius:
-                                              BorderRadius.circular(4.0),
-                                        ),
-                                        child: const Center(
-                                          child: Icon(
-                                            CupertinoIcons.checkmark_alt,
-                                            color: Colors.white,
-                                            size: 16.0,
-                                          ),
-                                        ),
-                                      ),
-                                    )
-                                  : const SizedBox.shrink(),
-                            ),
-                          )),
+                        ),
+                        icon: const Icon(
+                          CupertinoIcons.add,
+                          size: 14.0,
+                        ),
+                      ),
                     ),
                   ),
-                  FadeInUp(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 8.0,
-                        vertical: 5.0,
-                      ),
-                      child: Text(
-                        "Veuillez sélectionner les soins prodigués ou les services administrés à ce patient !",
-                        textScaleFactor: .8,
-                        style: TextStyle(
-                          fontFamily: 'Poppins',
-                          color: Colors.grey.shade800,
-                          fontSize: 14.0,
-                          fontWeight: FontWeight.w400,
-                        ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8.0,
+                      vertical: 5.0,
+                    ),
+                    child: Text(
+                      "Veuillez sélectionner les soins prodigués ou les services administrés à ce patient !",
+                      textScaleFactor: .8,
+                      style: TextStyle(
+                        fontFamily: 'Poppins',
+                        color: Colors.grey.shade800,
+                        fontSize: 14.0,
+                        fontWeight: FontWeight.w400,
                       ),
                     ),
                   ),
@@ -215,6 +122,209 @@ class _PatientTraitmentPageState extends State<PatientTraitmentPage> {
             ),
           )
         ],
+      ),
+    );
+  }
+
+  Widget patientInfo(BuildContext context) {
+    return SizedBox(
+      height: 140,
+      width: MediaQuery.of(context).size.width,
+      child: Card(
+        margin: EdgeInsets.zero,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  Container(
+                    height: 50.0,
+                    width: 50.0,
+                    decoration: BoxDecoration(
+                      color: Colors.indigo.shade300,
+                      borderRadius: BorderRadius.circular(5.0),
+                    ),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SvgPicture.asset(
+                          "assets/svg/profile.svg",
+                          height: 24.0,
+                          colorFilter: const ColorFilter.mode(
+                            Colors.white,
+                            BlendMode.srcIn,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(
+                    width: 5.0,
+                  ),
+                  Flexible(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Gaston delimond".toUpperCase(),
+                          style: const TextStyle(
+                            color: Colors.black,
+                            fontFamily: 'Poppins',
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        Row(
+                          children: [
+                            SvgPicture.asset(
+                              "assets/svg/location-place.svg",
+                              colorFilter: const ColorFilter.mode(
+                                Colors.black,
+                                BlendMode.srcIn,
+                              ),
+                              height: 20,
+                            ),
+                            const SizedBox(
+                              width: 5.0,
+                            ),
+                            Flexible(
+                              child: Text(
+                                "0304, Tombalbay, Gombe Kinshasa, Ref. Station cobil",
+                                textScaleFactor: .8,
+                                style: TextStyle(
+                                  fontSize: 12.0,
+                                  color: Colors.grey.shade800,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
+                      ],
+                    ),
+                  )
+                ],
+              ),
+              SizedBox(
+                height: 50.0,
+                width: MediaQuery.of(context).size.width,
+                child: OutlinedButton(
+                  onPressed: () {
+                    showModalBottomSheet(
+                        context: context,
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.vertical(
+                            top: Radius.circular(20.0),
+                          ),
+                        ),
+                        builder: (context) {
+                          for (var i in infirmiers) {
+                            i.isSelected = false;
+                          }
+                          return infirmiersBottomSheet(context);
+                        });
+                  },
+                  style: OutlinedButton.styleFrom(
+                    side: BorderSide(
+                      color: Colors.indigo.shade400,
+                      width: 1.5,
+                    ),
+                  ),
+                  child: Text(
+                    "Déléguer la visite à un collègue".toUpperCase(),
+                    style: const TextStyle(
+                      color: Colors.indigo,
+                      fontWeight: FontWeight.w600,
+                      fontFamily: 'Poppins',
+                      letterSpacing: 1,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  void showAddServiceModal(BuildContext context) {
+    final TextEditingController txtLibelle = TextEditingController();
+    return showCustomModal(
+      context,
+      modalTitle: "Ajout des Soins supplémentaires",
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          children: [
+            TextField(
+              textAlign: TextAlign.left,
+              maxLines: null,
+              controller: txtLibelle,
+              decoration: InputDecoration(
+                hintText: 'Entrez votre texte ici...',
+                labelText: 'Soin ou service supplémentaire',
+                alignLabelWithHint: true,
+                floatingLabelBehavior: FloatingLabelBehavior.always,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(
+                    5,
+                  ),
+                ),
+                contentPadding: const EdgeInsets.all(
+                  16.0,
+                ),
+              ),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            Align(
+              alignment: Alignment.bottomRight,
+              child: ElevatedButton.icon(
+                icon: SvgPicture.asset(
+                  "assets/svg/check-double.svg",
+                  colorFilter: const ColorFilter.mode(
+                    Colors.white,
+                    BlendMode.srcIn,
+                  ),
+                  height: 25.0,
+                ),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color.fromARGB(255, 9, 185, 83),
+                  alignment: Alignment.center,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10.0,
+                    vertical: 8.0,
+                  ),
+                ),
+                onPressed: () {
+                  if (txtLibelle.text.isNotEmpty) {
+                    var soin = Soin(libelle: txtLibelle.text);
+                    soin.selected = true;
+                    setState(() {
+                      widget.soins.add(soin);
+                      txtLibelle.clear();
+                    });
+                  }
+                },
+                label: const Text(
+                  "Sauvegarder",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w400,
+                    fontSize: 14.0,
+                    fontFamily: 'Poppins',
+                  ),
+                ),
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
@@ -345,7 +455,7 @@ class _PatientTraitmentPageState extends State<PatientTraitmentPage> {
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: SvgPicture.asset(
-                              "assets/svg/back.svg",
+                              "assets/svg/arrow-back.svg",
                               // ignore: deprecated_member_use
                               color: Colors.white,
                             ),
@@ -353,16 +463,13 @@ class _PatientTraitmentPageState extends State<PatientTraitmentPage> {
                         ),
                       ),
                     ),
-                    const SizedBox(
-                      width: 8.0,
-                    ),
                     const Text(
                       "Traitement du patient",
                       style: TextStyle(
-                        fontWeight: FontWeight.w700,
+                        fontWeight: FontWeight.w600,
                         fontFamily: 'Poppins',
                         color: Colors.white,
-                        fontSize: 16.0,
+                        fontSize: 18.0,
                       ),
                     )
                   ],
@@ -537,95 +644,95 @@ class TaskCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StatefulBuilder(builder: (context, setter) {
-      return ZoomIn(
-        child: Stack(
-          alignment: Alignment.bottomCenter,
-          children: [
-            Container(
-              width: MediaQuery.of(context).size.width,
-              margin: const EdgeInsets.only(bottom: 8),
-              height: 60.0,
-              decoration: BoxDecoration(
-                color: Colors.white,
+      return Stack(
+        alignment: Alignment.bottomCenter,
+        children: [
+          Container(
+            width: MediaQuery.of(context).size.width,
+            margin: const EdgeInsets.only(bottom: 4),
+            height: 60.0,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(5.0),
+            ),
+            child: Material(
+              borderRadius: BorderRadius.circular(5.0),
+              color: Colors.transparent,
+              child: InkWell(
                 borderRadius: BorderRadius.circular(5.0),
-              ),
-              child: Material(
-                borderRadius: BorderRadius.circular(5.0),
-                color: Colors.transparent,
-                child: InkWell(
-                  borderRadius: BorderRadius.circular(5.0),
-                  onTap: onSelected,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                          height: 30.0,
-                          width: 30.0,
-                          decoration: BoxDecoration(
-                            color: Colors.indigo.shade200,
-                            borderRadius: BorderRadius.circular(5.0),
-                          ),
-                          child: selected
-                              ? ZoomIn(
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      color: Colors.indigo[900],
-                                      borderRadius: BorderRadius.circular(4.0),
-                                    ),
-                                    child: const Center(
-                                      child: Icon(
-                                        CupertinoIcons.checkmark_alt,
-                                        color: Colors.white,
-                                        size: 16.0,
-                                      ),
+                onTap: onSelected,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        height: 30.0,
+                        width: 30.0,
+                        decoration: BoxDecoration(
+                          color: Colors.transparent,
+                          border: Border.all(color: Colors.blue.shade300),
+                          borderRadius: BorderRadius.circular(5.0),
+                        ),
+                        child: selected
+                            ? ZoomIn(
+                                child: Container(
+                                  margin: const EdgeInsets.all(2.0),
+                                  decoration: BoxDecoration(
+                                    color: Colors.blue,
+                                    borderRadius: BorderRadius.circular(4.0),
+                                  ),
+                                  child: const Center(
+                                    child: Icon(
+                                      CupertinoIcons.checkmark_alt,
+                                      color: Colors.white,
+                                      size: 16.0,
                                     ),
                                   ),
-                                )
-                              : const SizedBox.shrink(),
-                        ),
-                        const SizedBox(
-                          width: 8.0,
-                        ),
-                        // Texte à partir du début à droite avec passage à la ligne
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                soin.libelle!,
-                                textAlign: TextAlign.start,
-                                textScaleFactor: .8,
-                                style: TextStyle(
-                                  fontSize: 17.0,
-                                  decoration: selected
-                                      ? TextDecoration.lineThrough
-                                      : TextDecoration.none,
-                                  fontWeight: FontWeight.w500,
                                 ),
+                              )
+                            : const SizedBox.shrink(),
+                      ),
+                      const SizedBox(
+                        width: 8.0,
+                      ),
+                      // Texte à partir du début à droite avec passage à la ligne
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              soin.libelle!,
+                              textAlign: TextAlign.start,
+                              textScaleFactor: .8,
+                              style: TextStyle(
+                                fontSize: 17.0,
+                                decoration: selected
+                                    ? TextDecoration.lineThrough
+                                    : TextDecoration.none,
+                                fontWeight: FontWeight.w500,
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
               ),
             ),
-            Positioned(
-              bottom: 8.0,
-              child: Container(
-                color: Colors.indigo.shade200,
-                height: .8,
-                width: MediaQuery.of(context).size.width - 25,
-              ),
-            )
-          ],
-        ),
+          ),
+          Positioned(
+            bottom: 4.0,
+            child: Container(
+              color: Colors.indigo.shade100,
+              height: .8,
+              width: MediaQuery.of(context).size.width - 25,
+            ),
+          )
+        ],
       );
     });
   }

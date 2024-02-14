@@ -2,7 +2,7 @@ import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lottie/lottie.dart';
-import '../index.dart';
+import '../main/nurse/index.dart';
 import '../widgets/login_field.dart';
 
 class StartingScreen extends StatefulWidget {
@@ -21,290 +21,134 @@ class _StartingScreenState extends State<StartingScreen> {
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              Colors.indigo.shade300,
-              Colors.indigo.shade800,
-            ],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            stops: const [0.0, 1.0],
-            tileMode: TileMode.clamp,
-          ),
+          color: Theme.of(context).scaffoldBackgroundColor,
         ),
         child: PageView(
           controller: pageController,
+          physics: const NeverScrollableScrollPhysics(),
           children: [
-            landingHome(context),
             login(context),
+            register(context),
           ],
         ),
       ),
     );
   }
 
-  Widget landingHome(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Expanded(
-          child: SafeArea(
-            child: FadeInUp(
-              child: Lottie.asset(
-                "assets/animateds/doctor-1.json",
-                repeat: false,
-              ),
-            ),
-          ),
+  Widget login(BuildContext context) {
+    return Center(
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.only(
+          bottom: 10.0,
         ),
-        FadeInUp(
-          child: RichText(
-            textAlign: TextAlign.center,
-            text: TextSpan(
-              style: const TextStyle(
-                fontSize: 20.0,
-                fontFamily: 'Poppins',
-                color: Colors.white,
-                fontWeight: FontWeight.w700,
-              ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                const TextSpan(text: "Bienvenue sur \n"),
-                TextSpan(
-                  text: "HOME".toUpperCase(),
-                  style: TextStyle(
-                    fontWeight: FontWeight.w900,
-                    letterSpacing: 3.5,
-                    fontFamily: 'Staatliches',
-                    shadows: [
-                      Shadow(
-                        color: Colors.black.withOpacity(.2),
-                        blurRadius: .2,
-                        offset: const Offset(0, 3),
-                      )
-                    ],
-                    fontSize: 35.0,
-                  ),
+                Image.asset(
+                  "assets/imgs/logo-3.png",
+                  height: 50.0,
                 ),
-                TextSpan(
-                  text: "HEALTH".toUpperCase(),
-                  style: TextStyle(
-                    fontWeight: FontWeight.w900,
-                    letterSpacing: 3.5,
-                    fontFamily: 'Staatliches',
-                    shadows: [
-                      Shadow(
-                        color: Colors.black.withOpacity(.2),
-                        blurRadius: .2,
-                        offset: const Offset(0, 3),
-                      )
+                const SizedBox(
+                  width: 8.0,
+                ),
+                RichText(
+                  textAlign: TextAlign.center,
+                  text: TextSpan(
+                    style: const TextStyle(
+                      fontSize: 20.0,
+                      fontFamily: 'Poppins',
+                      fontWeight: FontWeight.w700,
+                    ),
+                    children: [
+                      TextSpan(
+                        text: "HOME".toUpperCase(),
+                        style: TextStyle(
+                          fontWeight: FontWeight.w900,
+                          fontFamily: 'Staatliches',
+                          letterSpacing: 2,
+                          color: const Color(0xFFE10000),
+                          shadows: [
+                            Shadow(
+                              color: Colors.black.withOpacity(.2),
+                              blurRadius: .2,
+                              offset: const Offset(0, 1),
+                            )
+                          ],
+                          fontSize: 40.0,
+                        ),
+                      ),
+                      TextSpan(
+                        text: "HEALTH".toUpperCase(),
+                        style: TextStyle(
+                          fontWeight: FontWeight.w900,
+                          letterSpacing: 2,
+                          fontFamily: 'Staatliches',
+                          shadows: [
+                            Shadow(
+                              color: Colors.black.withOpacity(.2),
+                              blurRadius: .2,
+                              offset: const Offset(0, 1),
+                            )
+                          ],
+                          fontSize: 40.0,
+                          color: Colors.black,
+                        ),
+                      ),
                     ],
-                    fontSize: 35.0,
-                    color: const Color.fromARGB(255, 235, 22, 40),
                   ),
                 ),
               ],
             ),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 10.0,
-            vertical: 10.0,
-          ),
-          child: FadeInUp(
-            child: Text(
-              "L'application offre un outil de planification intuitif permettant aux infirmiers de gérer leur emploi du temps de manière efficace. Ils peuvent organiser et planifier les visites chez les patients en fonction de leur disponibilité, optimisant ainsi leur itinéraire !",
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontFamily: 'Poppins',
-                fontSize: 10.0,
-                color: Colors.indigo.shade100,
-                fontWeight: FontWeight.w500,
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 15.0,
+                vertical: 5.0,
               ),
-            ),
-          ),
-        ),
-        ZoomIn(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 30.0,
-              vertical: 20.0,
-            ),
-            child: SizedBox(
-              height: 50.0,
-              width: MediaQuery.of(context).size.width,
-              child: ElevatedButton.icon(
-                icon: SvgPicture.asset(
-                  "assets/svg/next_big.svg",
-                  // ignore: deprecated_member_use
-                  color: Colors.white,
-                  width: 25.0,
-                  height: 20.0,
-                ),
-                style: ElevatedButton.styleFrom(
-                  elevation: 15.0,
-                  backgroundColor: const Color.fromARGB(255, 235, 22, 40),
-                  shape: const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(5.0),
-                      bottomLeft: Radius.circular(30.0),
-                      bottomRight: Radius.circular(30.0),
-                      topRight: Radius.circular(30.0),
-                    ),
-                  ),
-                ),
-                onPressed: () {
-                  pageController.jumpToPage(1);
-                },
-                label: const Text(
-                  "COMMENCER MAINTENANT",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w600,
-                    fontSize: 10.0,
-                    fontFamily: 'Poppins',
-                    letterSpacing: 1.5,
-                  ),
-                ),
-              ),
-            ),
-          ),
-        )
-      ],
-    );
-  }
-
-  Widget login(BuildContext context) {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.only(
-        bottom: 10.0,
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          SafeArea(
-            child: FadeInUp(
-              child: Lottie.asset(
-                "assets/animateds/doctor-1.json",
-                repeat: false,
-              ),
-            ),
-          ),
-          const SizedBox(
-            height: 5.0,
-          ),
-          FadeInUp(
-            child: RichText(
-              textAlign: TextAlign.center,
-              text: TextSpan(
-                style: const TextStyle(
-                  fontSize: 20.0,
+              child: Text(
+                "Veuillez vous connecter pour commencer vos interventions auprès des patients à domicile !",
+                textAlign: TextAlign.center,
+                style: TextStyle(
                   fontFamily: 'Poppins',
-                  color: Colors.white,
-                  fontWeight: FontWeight.w700,
+                  fontSize: 12.0,
+                  color: Colors.grey.shade600,
+                  fontWeight: FontWeight.w400,
                 ),
+              ),
+            ),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
+              child: Column(
                 children: [
-                  const TextSpan(text: "Authentification \n"),
-                  TextSpan(
-                    text: "HOME".toUpperCase(),
-                    style: TextStyle(
-                      fontWeight: FontWeight.w900,
-                      letterSpacing: 3.5,
-                      fontFamily: 'Staatliches',
-                      shadows: [
-                        Shadow(
-                          color: Colors.black.withOpacity(.2),
-                          blurRadius: .2,
-                          offset: const Offset(0, 3),
-                        )
-                      ],
-                      fontSize: 35.0,
-                    ),
+                  LoginField(
+                    icon: "email",
+                    hintText: "Entrez votre email...",
                   ),
-                  TextSpan(
-                    text: "HEALTH".toUpperCase(),
-                    style: TextStyle(
-                      fontWeight: FontWeight.w900,
-                      letterSpacing: 3.5,
-                      fontFamily: 'Staatliches',
-                      shadows: [
-                        Shadow(
-                          color: Colors.black.withOpacity(.2),
-                          blurRadius: .2,
-                          offset: const Offset(0, 3),
-                        )
-                      ],
-                      fontSize: 35.0,
-                      color: const Color.fromARGB(255, 235, 22, 40),
-                    ),
+                  SizedBox(
+                    height: 3,
+                  ),
+                  LoginField(
+                    icon: "lock-password",
+                    hintText: "Entrez le mot de passe...",
+                    isPassword: true,
                   ),
                 ],
               ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 20.0,
-              vertical: 5.0,
-            ),
-            child: FadeInUp(
-              child: Text(
-                "Veuillez vous authentifier pour accéder à l'application et commencer vos interventions auprès des patients à domicile !",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontFamily: 'Poppins',
-                  fontSize: 10.0,
-                  color: Colors.indigo.shade100,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ),
-          ),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
-            child: Column(
-              children: [
-                LoginField(
-                  icon: "profile",
-                  hintText: "Entrez votre identifiant...",
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                LoginField(
-                  icon: "lock-password",
-                  hintText: "Entrez le mot de passe...",
-                  isPassword: true,
-                ),
-              ],
-            ),
-          ),
-          ZoomIn(
-            child: Padding(
+            Padding(
               padding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
               child: SizedBox(
                 height: 50.0,
                 width: MediaQuery.of(context).size.width,
-                child: ElevatedButton.icon(
-                  icon: SvgPicture.asset(
-                    "assets/svg/next_big.svg",
-                    // ignore: deprecated_member_use
-                    color: Colors.white,
-                    width: 25.0,
-                    height: 20.0,
-                  ),
+                child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    elevation: 15.0,
-                    backgroundColor: const Color.fromARGB(255, 235, 22, 40),
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(5.0),
-                        bottomLeft: Radius.circular(30.0),
-                        bottomRight: Radius.circular(30.0),
-                        topRight: Radius.circular(30.0),
-                      ),
+                    backgroundColor: Colors.green,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5.0),
                     ),
                   ),
                   onPressed: () {
@@ -316,21 +160,245 @@ class _StartingScreenState extends State<StartingScreen> {
                       (route) => false,
                     );
                   },
-                  label: const Text(
+                  child: const Text(
                     "CONNECTER",
                     style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.w600,
-                      fontSize: 10.0,
                       fontFamily: 'Poppins',
-                      letterSpacing: 1.5,
+                      letterSpacing: 1,
                     ),
                   ),
                 ),
               ),
             ),
-          )
-        ],
+            Padding(
+              padding: const EdgeInsets.fromLTRB(15, 8, 15, 0),
+              child: SizedBox(
+                height: 50.0,
+                width: MediaQuery.of(context).size.width,
+                child: OutlinedButton(
+                  onPressed: () {
+                    pageController.jumpToPage(1);
+                  },
+                  style: OutlinedButton.styleFrom(
+                    side: BorderSide(
+                      color: Colors.indigo.shade400,
+                      width: 1.5,
+                    ),
+                  ),
+                  child: Text(
+                    "Créer un compte médecin".toUpperCase(),
+                    style: const TextStyle(
+                      color: Colors.indigo,
+                      fontWeight: FontWeight.w600,
+                      fontFamily: 'Poppins',
+                      letterSpacing: 1,
+                    ),
+                  ),
+                ),
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget register(BuildContext context) {
+    return Center(
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.only(
+          bottom: 10.0,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Image.asset(
+                  "assets/imgs/logo-3.png",
+                  height: 50.0,
+                ),
+                const SizedBox(
+                  width: 8.0,
+                ),
+                RichText(
+                  textAlign: TextAlign.center,
+                  text: TextSpan(
+                    style: const TextStyle(
+                      fontSize: 20.0,
+                      fontFamily: 'Poppins',
+                      fontWeight: FontWeight.w700,
+                    ),
+                    children: [
+                      TextSpan(
+                        text: "HOME".toUpperCase(),
+                        style: TextStyle(
+                          fontWeight: FontWeight.w900,
+                          fontFamily: 'Staatliches',
+                          color: const Color(0xFFE10000),
+                          shadows: [
+                            Shadow(
+                              color: Colors.black.withOpacity(.2),
+                              blurRadius: .2,
+                              offset: const Offset(0, 1),
+                            )
+                          ],
+                          fontSize: 40.0,
+                          letterSpacing: 2,
+                        ),
+                      ),
+                      TextSpan(
+                        text: "HEALTH".toUpperCase(),
+                        style: TextStyle(
+                          fontWeight: FontWeight.w900,
+                          letterSpacing: 2,
+                          fontFamily: 'Staatliches',
+                          shadows: [
+                            Shadow(
+                              color: Colors.black.withOpacity(.2),
+                              blurRadius: .2,
+                              offset: const Offset(0, 1),
+                            )
+                          ],
+                          fontSize: 40.0,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 15.0,
+                vertical: 5.0,
+              ),
+              child: Text(
+                "Veuillez créer un compte médecin pour gérer les visites à domicile de vos infirmier !",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontFamily: 'Poppins',
+                  fontSize: 12.0,
+                  color: Colors.grey.shade600,
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+            ),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
+              child: Column(
+                children: [
+                  LoginField(
+                    icon: "profile",
+                    hintText: "Nom complet...",
+                  ),
+                  SizedBox(
+                    height: 3,
+                  ),
+                  LoginField(
+                    icon: "phone",
+                    hintText: "Téléphone...",
+                  ),
+                  SizedBox(
+                    height: 3,
+                  ),
+                  LoginField(
+                    icon: "medical-o-1",
+                    hintText: "Numéro d'ordre...",
+                  ),
+                  SizedBox(
+                    height: 3,
+                  ),
+                  LoginField(
+                    icon: "hospital",
+                    hintText: "Hôpital...",
+                  ),
+                  SizedBox(
+                    height: 3,
+                  ),
+                  LoginField(
+                    icon: "email",
+                    hintText: "Adresse email...",
+                  ),
+                  SizedBox(
+                    height: 3,
+                  ),
+                  LoginField(
+                    icon: "lock-password",
+                    hintText: "Entrez le mot de passe...",
+                    isPassword: true,
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
+              child: SizedBox(
+                height: 50.0,
+                width: MediaQuery.of(context).size.width,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blue,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5.0),
+                    ),
+                  ),
+                  onPressed: () {
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const MainHome(),
+                      ),
+                      (route) => false,
+                    );
+                  },
+                  child: Text(
+                    "Créer compte".toUpperCase(),
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w600,
+                      fontFamily: 'Poppins',
+                      letterSpacing: 1,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(15, 8, 15, 0),
+              child: SizedBox(
+                height: 50.0,
+                width: MediaQuery.of(context).size.width,
+                child: OutlinedButton(
+                  onPressed: () {
+                    pageController.jumpToPage(0);
+                  },
+                  style: OutlinedButton.styleFrom(
+                    side: BorderSide(
+                      color: Colors.indigo.shade400,
+                      width: 1.5,
+                    ),
+                  ),
+                  child: Text(
+                    "Retour à la page de connexion".toUpperCase(),
+                    style: const TextStyle(
+                      color: Colors.indigo,
+                      fontWeight: FontWeight.w600,
+                      fontFamily: 'Poppins',
+                      letterSpacing: 1,
+                    ),
+                  ),
+                ),
+              ),
+            )
+          ],
+        ),
       ),
     );
   }

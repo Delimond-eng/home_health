@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:home_health/views/pages/patient_traitment_page.dart';
@@ -12,42 +11,16 @@ class MedicDocItemList extends StatelessWidget {
     return Stack(
       clipBehavior: Clip.none,
       children: [
-        Container(
+        SizedBox(
           height: 120.0,
-          margin: const EdgeInsets.fromLTRB(8, 8, 8, 0),
           width: MediaQuery.of(context).size.width,
-          decoration: BoxDecoration(
-            image: const DecorationImage(
-              image: AssetImage("assets/imgs/shape-bg-1.jpg"),
-              alignment: Alignment.center,
-              fit: BoxFit.cover,
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey.withOpacity(.1),
-                blurRadius: 5.0,
-                offset: const Offset(0, 3),
-              )
-            ],
-            borderRadius: BorderRadius.circular(8.0),
-          ),
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(8.0),
-              gradient: LinearGradient(
-                colors: [
-                  Colors.indigo.shade100,
-                  Colors.indigo.shade100.withOpacity(.9),
-                ],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-            ),
+          child: Card(
+            margin: const EdgeInsets.fromLTRB(8, 4, 8, 0),
             child: Material(
               color: Colors.transparent,
-              borderRadius: BorderRadius.circular(8.0),
+              borderRadius: BorderRadius.circular(5.0),
               child: InkWell(
-                borderRadius: BorderRadius.circular(8.0),
+                borderRadius: BorderRadius.circular(5.0),
                 onTap: () {
                   Navigator.push(
                     context,
@@ -79,7 +52,7 @@ class MedicDocItemList extends StatelessWidget {
                                   color: item.color!,
                                   border: Border.all(
                                     color: Colors.white,
-                                    width: 4.0,
+                                    width: 2.0,
                                   ),
                                 ),
                                 child: Padding(
@@ -111,7 +84,9 @@ class MedicDocItemList extends StatelessWidget {
                               SvgPicture.asset(
                                 "assets/svg/location-place.svg",
                                 colorFilter: const ColorFilter.mode(
-                                    Colors.black, BlendMode.srcIn),
+                                  Colors.black,
+                                  BlendMode.srcIn,
+                                ),
                                 height: 20,
                               ),
                               const SizedBox(
@@ -139,15 +114,15 @@ class MedicDocItemList extends StatelessWidget {
                             decoration: BoxDecoration(
                               border:
                                   Border.all(color: Colors.white, width: 1.5),
-                              borderRadius: BorderRadius.circular(20),
-                              color: Colors.indigo,
+                              borderRadius: BorderRadius.circular(5),
+                              color: Colors.black87,
                             ),
                             child: Material(
-                              borderRadius: BorderRadius.circular(20),
+                              borderRadius: BorderRadius.circular(5),
                               color: Colors.transparent,
                               child: InkWell(
                                 onTap: () {},
-                                borderRadius: BorderRadius.circular(20),
+                                borderRadius: BorderRadius.circular(5),
                                 child: Padding(
                                   padding: const EdgeInsets.symmetric(
                                     vertical: 4.0,
@@ -157,18 +132,18 @@ class MedicDocItemList extends StatelessWidget {
                                     children: [
                                       SvgPicture.asset(
                                         "assets/svg/map-location.svg",
-                                        colorFilter: const ColorFilter.mode(
-                                          Colors.white,
+                                        colorFilter: ColorFilter.mode(
+                                          Colors.brown.shade100,
                                           BlendMode.srcIn,
                                         ),
                                         height: 15.0,
                                       ),
-                                      const Text(
+                                      Text(
                                         'Itinéraire',
                                         style: TextStyle(
                                           fontSize: 12.0,
                                           fontWeight: FontWeight.w500,
-                                          color: Colors.white,
+                                          color: Colors.brown.shade100,
                                         ),
                                       )
                                     ],
@@ -221,20 +196,20 @@ class MedicDocItemList extends StatelessWidget {
           ),
         ),
         Positioned(
-          top: 8.0,
+          top: 4.0,
           right: 12.0,
           child: Column(
             children: [
               Container(
                 height: 5.0,
                 width: 3.0,
-                color: Colors.white,
+                color: Colors.grey.shade200,
               ),
               Container(
                   height: 10.0,
                   width: 80.0,
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: Colors.grey.shade200,
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Row(
@@ -244,9 +219,9 @@ class MedicDocItemList extends StatelessWidget {
                         child: Container(
                           height: 10.0,
                           width: 80.0,
-                          margin: const EdgeInsets.all(3.0),
+                          margin: const EdgeInsets.all(2.0),
                           decoration: BoxDecoration(
-                            color: item.color!,
+                            color: item.color!.shade400,
                             borderRadius: BorderRadius.circular(15.0),
                           ),
                         ),
@@ -264,7 +239,7 @@ class MedicDocItemList extends StatelessWidget {
 class Patient {
   String? nom;
   String? adresse, dateHour;
-  Color? color;
+  MaterialColor? color;
   List<Soin>? soins;
   Patient({this.nom, this.adresse, this.color, this.dateHour, this.soins});
 }

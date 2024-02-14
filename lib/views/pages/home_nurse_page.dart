@@ -1,5 +1,4 @@
 import 'package:animate_do/animate_do.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../../data/mock_data.dart';
@@ -41,21 +40,19 @@ class _HomeScreenState extends State<HomeScreen> {
                         color: Colors.indigo,
                       ),
                     ),
-                    FadeInUp(
-                      child: SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 8.0, vertical: 10.0),
-                        child: Row(
-                          children: [
-                            for (int i = 0; i < schedules.length; i++) ...[
-                              ScheduleTile(
-                                isLast: i == schedules.length - 1,
-                                item: schedules[i],
-                              ),
-                            ],
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8.0, vertical: 10.0),
+                      child: Row(
+                        children: [
+                          for (int i = 0; i < schedules.length; i++) ...[
+                            ScheduleTile(
+                              isLast: i == schedules.length - 1,
+                              item: schedules[i],
+                            ),
                           ],
-                        ),
+                        ],
                       ),
                     ),
                     const Padding(
@@ -70,19 +67,17 @@ class _HomeScreenState extends State<HomeScreen> {
                     const SizedBox(
                       height: 5.0,
                     ),
-                    FadeInUp(
-                      child: ListView.builder(
-                        padding: const EdgeInsets.only(bottom: 20.0),
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemCount: patientsList.length,
-                        itemBuilder: ((context, index) {
-                          var item = patientsList[index];
-                          return MedicDocItemList(
-                            item: item,
-                          );
-                        }),
-                      ),
+                    ListView.builder(
+                      padding: const EdgeInsets.only(bottom: 20.0),
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: patientsList.length,
+                      itemBuilder: ((context, index) {
+                        var item = patientsList[index];
+                        return MedicDocItemList(
+                          item: item,
+                        );
+                      }),
                     )
                   ],
                 ),
@@ -123,47 +118,41 @@ class _HomeScreenState extends State<HomeScreen> {
               children: [
                 Row(
                   children: [
-                    ZoomIn(
-                      child: SvgPicture.asset(
-                        'assets/svg/house-medical.svg',
-                        colorFilter: const ColorFilter.mode(
-                            Colors.white, BlendMode.srcIn),
-                        height: 25.0,
-                      ),
+                    Image.asset(
+                      "assets/imgs/logo-3.png",
+                      height: 25.0,
                     ),
-                    JelloIn(
-                      child: RichText(
-                        textAlign: TextAlign.center,
-                        text: TextSpan(
-                          style: TextStyle(
-                            fontSize: 30.0,
-                            fontFamily: 'Staatliches',
-                            color: Colors.white,
-                            fontWeight: FontWeight.w700,
-                            shadows: [
-                              Shadow(
-                                color: Colors.black.withOpacity(.2),
-                                blurRadius: .2,
-                                offset: const Offset(0, 3),
-                              )
-                            ],
-                          ),
-                          children: [
-                            TextSpan(
-                              text: "HOME".toUpperCase(),
-                              style: const TextStyle(
-                                fontWeight: FontWeight.w900,
-                              ),
-                            ),
-                            TextSpan(
-                              text: "HEALTH".toUpperCase(),
-                              style: const TextStyle(
-                                fontWeight: FontWeight.w900,
-                                color: Color.fromARGB(255, 234, 59, 74),
-                              ),
-                            ),
+                    RichText(
+                      textAlign: TextAlign.center,
+                      text: TextSpan(
+                        style: TextStyle(
+                          fontSize: 30.0,
+                          fontFamily: 'Staatliches',
+                          color: Colors.white,
+                          fontWeight: FontWeight.w700,
+                          shadows: [
+                            Shadow(
+                              color: Colors.black.withOpacity(.2),
+                              blurRadius: .2,
+                              offset: const Offset(0, 3),
+                            )
                           ],
                         ),
+                        children: [
+                          TextSpan(
+                            text: "HOME".toUpperCase(),
+                            style: const TextStyle(
+                              fontWeight: FontWeight.w900,
+                            ),
+                          ),
+                          TextSpan(
+                            text: "HEALTH".toUpperCase(),
+                            style: const TextStyle(
+                              fontWeight: FontWeight.w900,
+                              color: Color.fromARGB(255, 234, 59, 74),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ],
