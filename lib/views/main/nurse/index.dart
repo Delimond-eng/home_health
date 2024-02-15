@@ -64,22 +64,22 @@ class _MainHomeState extends State<MainHome> {
             label: "Acceuil",
           ),
           BottomNavigationBarItem(
-            icon: SvgPicture.asset("assets/svg/check-double.svg", height: 22.0),
+            icon: SvgPicture.asset("assets/svg/calendarr.svg", height: 22.0),
             activeIcon: JelloIn(
               child: SvgPicture.asset(
-                "assets/svg/check-double.svg",
+                "assets/svg/calendarr.svg",
                 height: 22.0,
                 colorFilter:
                     const ColorFilter.mode(Colors.indigo, BlendMode.srcIn),
               ),
             ),
-            label: "Visites faites",
+            label: "Agenda",
           ),
           BottomNavigationBarItem(
-            icon: SvgPicture.asset("assets/svg/chart-square.svg", height: 22.0),
+            icon: SvgPicture.asset("assets/svg/check-double.svg", height: 22.0),
             activeIcon: JelloIn(
               child: SvgPicture.asset(
-                "assets/svg/chart-square.svg",
+                "assets/svg/check-double.svg",
                 height: 22.0,
                 colorFilter:
                     const ColorFilter.mode(Colors.indigo, BlendMode.srcIn),

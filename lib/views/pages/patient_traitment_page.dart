@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:home_health/data/mock_data.dart';
 import 'package:home_health/utils/costum_modal.dart';
+import 'package:home_health/views/widgets/custom_checkbox.dart';
 
 import '../../models/infirmier.dart';
 import '../widgets/heading_title.dart';
@@ -91,6 +92,28 @@ class _PatientTraitmentPageState extends State<PatientTraitmentPage> {
                         fontSize: 14.0,
                         fontWeight: FontWeight.w400,
                       ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: CustomCheckbox(
+                      isChecked: isSelectedAll,
+                      title: "Sélectionnez tout",
+                      onChecked: () {
+                        setState(() {
+                          isSelectedAll = !isSelectedAll;
+                          if (isSelectedAll) {
+                            for (var e in widget.soins) {
+                              e.selected = true;
+                            }
+                            selecteds.addAll(widget.soins);
+                          } else {
+                            for (var e in widget.soins) {
+                              e.selected = false;
+                            }
+                          }
+                        });
+                      },
                     ),
                   ),
                   for (int i = 0; i < widget.soins.length; i++) ...[
@@ -668,20 +691,24 @@ class TaskCard extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Container(
-                        height: 30.0,
-                        width: 30.0,
+                        height: 25.0,
+                        width: 25.0,
                         decoration: BoxDecoration(
                           color: Colors.transparent,
-                          border: Border.all(color: Colors.blue.shade300),
+                          border: Border.all(
+                            color:
+                                selected ? Colors.blue.shade300 : Colors.grey,
+                            width: 2.0,
+                          ),
                           borderRadius: BorderRadius.circular(5.0),
                         ),
                         child: selected
                             ? ZoomIn(
                                 child: Container(
-                                  margin: const EdgeInsets.all(2.0),
+                                  margin: const EdgeInsets.all(2.5),
                                   decoration: BoxDecoration(
                                     color: Colors.blue,
-                                    borderRadius: BorderRadius.circular(4.0),
+                                    borderRadius: BorderRadius.circular(3.0),
                                   ),
                                   child: const Center(
                                     child: Icon(

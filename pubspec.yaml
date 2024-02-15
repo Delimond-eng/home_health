@@ -31,6 +31,7 @@ dependencies:
   expandable: ^5.0.1
   enhance_stepper: ^0.1.1
   flutter_launcher_icons: ^0.13.1
+  date_picker_timeline: ^1.2.5
 
 dev_dependencies:
   flutter_test:

@@ -1,7 +1,4 @@
-import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:lottie/lottie.dart';
 import '../main/nurse/index.dart';
 import '../widgets/login_field.dart';
 
@@ -182,15 +179,15 @@ class _StartingScreenState extends State<StartingScreen> {
                     pageController.jumpToPage(1);
                   },
                   style: OutlinedButton.styleFrom(
-                    side: BorderSide(
-                      color: Colors.indigo.shade400,
+                    side: const BorderSide(
+                      color: Colors.blue,
                       width: 1.5,
                     ),
                   ),
                   child: Text(
                     "Créer un compte médecin".toUpperCase(),
                     style: const TextStyle(
-                      color: Colors.indigo,
+                      color: Colors.blue,
                       fontWeight: FontWeight.w600,
                       fontFamily: 'Poppins',
                       letterSpacing: 1,
@@ -380,15 +377,15 @@ class _StartingScreenState extends State<StartingScreen> {
                     pageController.jumpToPage(0);
                   },
                   style: OutlinedButton.styleFrom(
-                    side: BorderSide(
-                      color: Colors.indigo.shade400,
+                    side: const BorderSide(
+                      color: Colors.blue,
                       width: 1.5,
                     ),
                   ),
                   child: Text(
                     "Retour à la page de connexion".toUpperCase(),
                     style: const TextStyle(
-                      color: Colors.indigo,
+                      color: Colors.blue,
                       fontWeight: FontWeight.w600,
                       fontFamily: 'Poppins',
                       letterSpacing: 1,
