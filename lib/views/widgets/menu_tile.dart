@@ -60,28 +60,16 @@ class MenuTile extends StatelessWidget {
                     color: Colors.white,
                     size: 40.0,
                   ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        title,
-                        style: const TextStyle(
-                          fontSize: 16.0,
-                          fontFamily: 'Poppins',
-                          fontWeight: FontWeight.w700,
-                          color: Colors.white,
-                        ),
+                  Flexible(
+                    child: Text(
+                      title,
+                      style: const TextStyle(
+                        fontSize: 16.0,
+                        fontFamily: 'Poppins',
+                        fontWeight: FontWeight.w700,
+                        color: Colors.white,
                       ),
-                      Text(
-                        description!,
-                        style: TextStyle(
-                          fontSize: 10.0,
-                          fontFamily: 'Poppins',
-                          fontWeight: FontWeight.w500,
-                          color: Colors.grey[100],
-                        ),
-                      )
-                    ],
+                    ),
                   ),
                 ],
               ),

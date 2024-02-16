@@ -1,23 +1,25 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:home_health/views/pages/schedule_nurse_page.dart';
-import '../../pages/home_nurse_page.dart';
-import 'package:animate_do/animate_do.dart';
 
-class NurseHome extends StatefulWidget {
-  const NurseHome({super.key});
+import '../../pages/home_doctor_page.dart';
+
+class DoctorHome extends StatefulWidget {
+  const DoctorHome({super.key});
 
   @override
-  State<NurseHome> createState() => _NurseHomeState();
+  State<DoctorHome> createState() => _DoctorHomeState();
 }
 
-class _NurseHomeState extends State<NurseHome> {
+class _DoctorHomeState extends State<DoctorHome> {
   int currentPage = 0;
   final List<Widget> _pages = [
-    const HomeScreen(),
-    const ScheduleNursePage(),
+    const HomeDoctorPage(),
     const Center(
-      child: Text("Reports"),
+      child: Text("Patients"),
+    ),
+    const Center(
+      child: Text("Nurses"),
     ),
     const Center(
       child: Text("Profil"),
@@ -30,7 +32,7 @@ class _NurseHomeState extends State<NurseHome> {
       backgroundColor: Colors.grey.shade200,
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: Colors.white,
-        elevation: 1.0,
+        elevation: 2.0,
         iconSize: 20.0,
         selectedItemColor: Colors.indigo,
         showUnselectedLabels: true,
@@ -49,12 +51,12 @@ class _NurseHomeState extends State<NurseHome> {
         items: [
           BottomNavigationBarItem(
             icon: SvgPicture.asset(
-              "assets/svg/dashboard-1.svg",
+              "assets/svg/menu-2.svg",
               height: 22.0,
             ),
             activeIcon: JelloIn(
               child: SvgPicture.asset(
-                "assets/svg/dashboard-1.svg",
+                "assets/svg/menu-2.svg",
                 colorFilter:
                     const ColorFilter.mode(Colors.indigo, BlendMode.srcIn),
                 height: 22.0,
@@ -63,28 +65,29 @@ class _NurseHomeState extends State<NurseHome> {
             label: "Acceuil",
           ),
           BottomNavigationBarItem(
-            icon: SvgPicture.asset("assets/svg/calendar.svg", height: 22.0),
+            icon:
+                SvgPicture.asset("assets/svg/group-patients.svg", height: 22.0),
             activeIcon: JelloIn(
               child: SvgPicture.asset(
-                "assets/svg/calendar.svg",
+                "assets/svg/group-patients.svg",
                 height: 22.0,
                 colorFilter:
                     const ColorFilter.mode(Colors.indigo, BlendMode.srcIn),
               ),
             ),
-            label: "Agenda",
+            label: "Patients",
           ),
           BottomNavigationBarItem(
-            icon: SvgPicture.asset("assets/svg/report-2.svg", height: 22.0),
+            icon: SvgPicture.asset("assets/svg/nurse.svg", height: 22.0),
             activeIcon: JelloIn(
               child: SvgPicture.asset(
-                "assets/svg/report-2.svg",
+                "assets/svg/nurse.svg",
                 height: 22.0,
                 colorFilter:
                     const ColorFilter.mode(Colors.indigo, BlendMode.srcIn),
               ),
             ),
-            label: "Rapports",
+            label: "Infirmiers",
           ),
           BottomNavigationBarItem(
             icon: SvgPicture.asset("assets/svg/profile.svg"),

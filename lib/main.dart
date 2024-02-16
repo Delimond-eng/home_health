@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:get/get.dart';
+import 'package:home_health/controllers/auth_controller.dart';
+import 'package:home_health/controllers/data_controller.dart';
 import './views/screens/starting_screen.dart';
 
 void main() async {
+  Get.put(AuthController());
+  Get.put(DataController());
   runApp(const MyApp());
-  await SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitUp,
-    DeviceOrientation.portraitDown,
-  ]);
 }
 
 class MyApp extends StatelessWidget {
@@ -16,8 +18,8 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
+    return GetMaterialApp(
+      title: 'Home Health App',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.indigo,
@@ -28,6 +30,7 @@ class MyApp extends StatelessWidget {
         fontFamily: 'Poppins',
       ),
       home: Builder(builder: (context) => const StartingScreen()),
+      builder: EasyLoading.init(),
     );
   }
 }

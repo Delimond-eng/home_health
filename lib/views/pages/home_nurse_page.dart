@@ -1,5 +1,5 @@
-import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
+import 'package:home_health/views/widgets/user_avatar.dart';
 import '../../data/mock_data.dart';
 import '../widgets/heading_title.dart';
 import '../widgets/medic_doc_item.dart';
@@ -17,7 +17,6 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: Colors.grey[200],
       body: SizedBox(
         width: size.width,
         height: size.height,
@@ -117,10 +116,10 @@ class _HomeScreenState extends State<HomeScreen> {
               children: [
                 Row(
                   children: [
-                    Image.asset(
+                    /* Image.asset(
                       "assets/imgs/logo-3.png",
                       height: 25.0,
-                    ),
+                    ), */
                     RichText(
                       textAlign: TextAlign.center,
                       text: TextSpan(
@@ -156,27 +155,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ],
                 ),
-                ZoomIn(
-                  child: Container(
-                    height: 50.0,
-                    width: 50.0,
-                    decoration: BoxDecoration(
-                      image: const DecorationImage(
-                        image: AssetImage("assets/imgs/avatar1.jpg"),
-                        alignment: Alignment.center,
-                        fit: BoxFit.cover,
-                      ),
-                      shape: BoxShape.circle,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(.2),
-                          blurRadius: 8.0,
-                          offset: const Offset(0, 3),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
+                const UserAvatar()
               ],
             ),
           ),

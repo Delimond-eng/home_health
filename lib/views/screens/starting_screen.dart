@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:home_health/global/controllers.dart';
+import 'package:home_health/services/api.manger.dart';
+import 'package:home_health/views/widgets/submit_button_loader.dart';
+import '../main/doctor/index.dart';
 import '../main/nurse/index.dart';
 import '../widgets/login_field.dart';
 
@@ -11,6 +16,7 @@ class StartingScreen extends StatefulWidget {
 
 class _StartingScreenState extends State<StartingScreen> {
   final PageController pageController = PageController(initialPage: 0);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,6 +38,9 @@ class _StartingScreenState extends State<StartingScreen> {
     );
   }
 
+  bool loginLoading = false;
+  final TextEditingController txtEmail = TextEditingController();
+  final TextEditingController txtPass = TextEditingController();
   Widget login(BuildContext context) {
     return Center(
       child: SingleChildScrollView(
@@ -117,21 +126,24 @@ class _StartingScreenState extends State<StartingScreen> {
                 ),
               ),
             ),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
+            Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
               child: Column(
                 children: [
                   LoginField(
                     icon: "email",
                     hintText: "Entrez votre email...",
+                    controller: txtEmail,
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 3,
                   ),
                   LoginField(
                     icon: "lock-password",
                     hintText: "Entrez le mot de passe...",
                     isPassword: true,
+                    controller: txtPass,
                   ),
                 ],
               ),
@@ -141,31 +153,51 @@ class _StartingScreenState extends State<StartingScreen> {
               child: SizedBox(
                 height: 50.0,
                 width: MediaQuery.of(context).size.width,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.green,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5.0),
-                    ),
-                  ),
+                child: SubmitBtnLoader(
+                  isLoading: loginLoading,
+                  label: "Connecter",
+                  color: Colors.green,
                   onPressed: () {
-                    Navigator.pushAndRemoveUntil(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const MainHome(),
-                      ),
-                      (route) => false,
-                    );
+                    if (txtEmail.text.isEmpty) {
+                      EasyLoading.showToast("Adresse email requis !");
+                      return;
+                    }
+                    if (txtPass.text.isEmpty) {
+                      EasyLoading.showToast("Mot de passe requis !");
+                      return;
+                    }
+                    setState(() => loginLoading = true);
+
+                    //Start login statment
+                    ApiManager.login(
+                      data: {
+                        "email": txtEmail.text,
+                        "pwd": txtPass.text,
+                      },
+                    ).then((res) {
+                      setState(() => loginLoading = false);
+                      if (res != null) {
+                        if (res["profile"].toString() == "nurse") {
+                          Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const NurseHome(),
+                            ),
+                            (route) => false,
+                          );
+                        } else {
+                          dataController.initDoctorData();
+                          Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const DoctorHome(),
+                            ),
+                            (route) => false,
+                          );
+                        }
+                      }
+                    });
                   },
-                  child: const Text(
-                    "CONNECTER",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w600,
-                      fontFamily: 'Poppins',
-                      letterSpacing: 1,
-                    ),
-                  ),
                 ),
               ),
             ),
@@ -202,6 +234,14 @@ class _StartingScreenState extends State<StartingScreen> {
     );
   }
 
+  final TextEditingController txtRegisterName = TextEditingController();
+  final TextEditingController txtRegisterPhone = TextEditingController();
+  final TextEditingController txtRegisterNumOrder = TextEditingController();
+  final TextEditingController txtRegisterHospital = TextEditingController();
+  final TextEditingController txtRegisterEmail = TextEditingController();
+  final TextEditingController txtRegisterPass = TextEditingController();
+
+  bool registerLoading = false;
   Widget register(BuildContext context) {
     return Center(
       child: SingleChildScrollView(
@@ -287,48 +327,55 @@ class _StartingScreenState extends State<StartingScreen> {
                 ),
               ),
             ),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
+            Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
               child: Column(
                 children: [
                   LoginField(
                     icon: "profile",
                     hintText: "Nom complet...",
+                    controller: txtRegisterName,
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 3,
                   ),
                   LoginField(
                     icon: "phone",
                     hintText: "Téléphone...",
+                    controller: txtRegisterPhone,
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 3,
                   ),
                   LoginField(
                     icon: "medical-o-1",
                     hintText: "Numéro d'ordre...",
+                    controller: txtRegisterNumOrder,
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 3,
                   ),
                   LoginField(
                     icon: "hospital",
                     hintText: "Hôpital...",
+                    controller: txtRegisterHospital,
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 3,
                   ),
                   LoginField(
                     icon: "email",
                     hintText: "Adresse email...",
+                    controller: txtRegisterEmail,
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 3,
                   ),
                   LoginField(
                     icon: "lock-password",
                     hintText: "Entrez le mot de passe...",
+                    controller: txtRegisterPass,
                     isPassword: true,
                   ),
                 ],
@@ -339,31 +386,61 @@ class _StartingScreenState extends State<StartingScreen> {
               child: SizedBox(
                 height: 50.0,
                 width: MediaQuery.of(context).size.width,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5.0),
-                    ),
-                  ),
+                child: SubmitBtnLoader(
+                  isLoading: registerLoading,
+                  label: "Créer compte",
+                  color: Colors.blue,
                   onPressed: () {
-                    Navigator.pushAndRemoveUntil(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const MainHome(),
-                      ),
-                      (route) => false,
-                    );
+                    if (txtRegisterName.text.isEmpty) {
+                      EasyLoading.showToast('Nom complet requis !');
+                      return;
+                    }
+                    if (txtRegisterEmail.text.isEmpty) {
+                      EasyLoading.showToast('Email requis !');
+                      return;
+                    }
+                    if (txtRegisterPhone.text.isEmpty) {
+                      EasyLoading.showToast('Numéro de téléphone requis !');
+                      return;
+                    }
+                    if (txtRegisterNumOrder.text.isEmpty) {
+                      EasyLoading.showToast('Numéro d\'ordre requis !');
+                      return;
+                    }
+                    if (txtRegisterHospital.text.isEmpty) {
+                      EasyLoading.showToast('Hôpital requis !');
+                      return;
+                    }
+                    if (txtRegisterPass.text.isEmpty) {
+                      EasyLoading.showToast('Hôpital requis !');
+                      return;
+                    }
+                    setState(() => registerLoading = true);
+                    ApiManager.registerDoctor(
+                      data: {
+                        "email": txtRegisterEmail.text,
+                        "pwd": txtRegisterPass.text,
+                        "fullname": txtRegisterName.text,
+                        "phone": txtRegisterPhone.text,
+                        "order_num": txtRegisterNumOrder.text,
+                        "hospital": txtRegisterHospital.text
+                      },
+                    ).then((res) {
+                      setState(() => registerLoading = false);
+                      if (res != null) {
+                        EasyLoading.showSuccess(
+                            "Votre compte a été créé avec succès !");
+
+                        Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const DoctorHome(),
+                          ),
+                          (route) => false,
+                        );
+                      }
+                    });
                   },
-                  child: Text(
-                    "Créer compte".toUpperCase(),
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w600,
-                      fontFamily: 'Poppins',
-                      letterSpacing: 1,
-                    ),
-                  ),
                 ),
               ),
             ),

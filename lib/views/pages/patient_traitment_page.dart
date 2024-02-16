@@ -9,6 +9,7 @@ import 'package:home_health/views/widgets/custom_checkbox.dart';
 import '../../models/infirmier.dart';
 import '../widgets/heading_title.dart';
 import '../widgets/medic_doc_item.dart';
+import '../widgets/user_avatar.dart';
 
 class PatientTraitmentPage extends StatefulWidget {
   final List<Soin> soins;
@@ -111,6 +112,7 @@ class _PatientTraitmentPageState extends State<PatientTraitmentPage> {
                             for (var e in widget.soins) {
                               e.selected = false;
                             }
+                            selecteds = [];
                           }
                         });
                       },
@@ -497,27 +499,7 @@ class _PatientTraitmentPageState extends State<PatientTraitmentPage> {
                     )
                   ],
                 ),
-                ZoomIn(
-                  child: Container(
-                    height: 50.0,
-                    width: 50.0,
-                    decoration: BoxDecoration(
-                      image: const DecorationImage(
-                        image: AssetImage("assets/imgs/avatar1.jpg"),
-                        alignment: Alignment.center,
-                        fit: BoxFit.cover,
-                      ),
-                      shape: BoxShape.circle,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(.2),
-                          blurRadius: 8.0,
-                          offset: const Offset(0, 3),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
+                const UserAvatar()
               ],
             ),
           ),
