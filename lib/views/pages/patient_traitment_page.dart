@@ -1,58 +1,49 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:home_health/data/mock_data.dart';
+import 'package:home_health/models/patient.dart';
+import 'package:home_health/services/api.manger.dart';
 import 'package:home_health/utils/costum_modal.dart';
 import 'package:home_health/views/widgets/custom_checkbox.dart';
+import 'package:home_health/views/widgets/submit_button_loader.dart';
 
 import '../../models/infirmier.dart';
+import '../../models/schedule.dart';
 import '../widgets/heading_title.dart';
-import '../widgets/medic_doc_item.dart';
 import '../widgets/user_avatar.dart';
 
 class PatientTraitmentPage extends StatefulWidget {
-  final List<Soin> soins;
-  const PatientTraitmentPage({super.key, required this.soins});
+  final List<Treatment> soins;
+  final Visit item;
+  const PatientTraitmentPage(
+      {super.key, required this.soins, required this.item});
 
   @override
   State<PatientTraitmentPage> createState() => _PatientTraitmentPageState();
 }
 
 class _PatientTraitmentPageState extends State<PatientTraitmentPage> {
-  List<Soin> selecteds = [];
+  List<Treatment> selecteds = [];
   bool isSelectedAll = false;
+  bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey.shade200,
-      floatingActionButton: selecteds.isNotEmpty
-          ? ZoomIn(
-              child: FloatingActionButton(
-                backgroundColor: const Color.fromARGB(255, 8, 164, 99),
-                child: SvgPicture.asset(
-                  "assets/svg/check-double.svg",
-                  colorFilter:
-                      const ColorFilter.mode(Colors.white, BlendMode.srcIn),
-                  height: 24.0,
-                ),
-                onPressed: () {},
-              ),
-            )
-          : null,
       body: Column(
         children: [
           _header(context),
           Expanded(
             child: SingleChildScrollView(
-              padding: const EdgeInsets.all(10),
               child: Column(
                 children: [
                   patientInfo(context),
                   Padding(
                     padding: const EdgeInsets.symmetric(
-                      horizontal: 8.0,
+                      horizontal: 10.0,
                       vertical: 2,
                     ),
                     child: HeadingTitle(
@@ -81,7 +72,7 @@ class _PatientTraitmentPageState extends State<PatientTraitmentPage> {
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(
-                      horizontal: 8.0,
+                      horizontal: 10.0,
                       vertical: 5.0,
                     ),
                     child: Text(
@@ -96,7 +87,7 @@ class _PatientTraitmentPageState extends State<PatientTraitmentPage> {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.all(8.0),
+                    padding: const EdgeInsets.all(10.0),
                     child: CustomCheckbox(
                       isChecked: isSelectedAll,
                       title: "Sélectionnez tout",
@@ -105,12 +96,12 @@ class _PatientTraitmentPageState extends State<PatientTraitmentPage> {
                           isSelectedAll = !isSelectedAll;
                           if (isSelectedAll) {
                             for (var e in widget.soins) {
-                              e.selected = true;
+                              e.patientTreatmentStatus = "done";
                             }
                             selecteds.addAll(widget.soins);
                           } else {
                             for (var e in widget.soins) {
-                              e.selected = false;
+                              e.patientTreatmentStatus = "pending";
                             }
                             selecteds = [];
                           }
@@ -118,30 +109,7 @@ class _PatientTraitmentPageState extends State<PatientTraitmentPage> {
                       },
                     ),
                   ),
-                  for (int i = 0; i < widget.soins.length; i++) ...[
-                    TaskCard(
-                      selected: widget.soins[i].selected,
-                      onSelected: () {
-                        setState(() {
-                          widget.soins[i].selected = !widget.soins[i].selected;
-                        });
-                        if (widget.soins[i].selected) {
-                          setState(() {
-                            selecteds.add(widget.soins[i]);
-                          });
-                        } else {
-                          setState(() {
-                            int index = selecteds.indexWhere((e) => e.libelle!
-                                .toLowerCase()
-                                .contains(
-                                    widget.soins[i].libelle!.toLowerCase()));
-                            selecteds.removeAt(index);
-                          });
-                        }
-                      },
-                      soin: widget.soins[i],
-                    ),
-                  ],
+                  buildItems(context)
                 ],
               ),
             ),
@@ -151,14 +119,91 @@ class _PatientTraitmentPageState extends State<PatientTraitmentPage> {
     );
   }
 
+  Widget buildItems(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        children: [
+          for (int i = 0; i < widget.soins.length; i++) ...[
+            TaskCard(
+              selected: widget.soins[i].patientTreatmentStatus == "done",
+              onSelected: () {
+                setState(() {
+                  widget.soins[i].patientTreatmentStatus =
+                      widget.soins[i].patientTreatmentStatus == "pending"
+                          ? "done"
+                          : "pending";
+                });
+                if (widget.soins[i].patientTreatmentStatus == 'done') {
+                  setState(() {
+                    selecteds.add(widget.soins[i]);
+                  });
+                } else {
+                  setState(() {
+                    int index = selecteds.indexWhere((e) => e
+                        .patientTreatmentLibelle!
+                        .toLowerCase()
+                        .contains(widget.soins[i].patientTreatmentLibelle!
+                            .toLowerCase()));
+                    selecteds.removeAt(index);
+                  });
+                }
+              },
+              soin: widget.soins[i],
+            ),
+          ],
+          if (selecteds.isNotEmpty)
+            ZoomIn(
+              child: SizedBox(
+                height: 50.0,
+                width: MediaQuery.of(context).size.width,
+                child: SubmitBtnLoader(
+                  color: Colors.green,
+                  isLoading: isLoading,
+                  onPressed: () {
+                    List<Map<String, dynamic>> data = [];
+                    for (var e in selecteds) {
+                      if (e.patientTreatmentStatus == 'done') {
+                        data.add({"id": e.id});
+                      }
+                    }
+
+                    if (data.isEmpty) {
+                      EasyLoading.showToast(
+                          "Veuillez cocher un traitement ou service !");
+                      return;
+                    }
+                    setState(() => isLoading = true);
+                    ApiManager.completVisit(data: {
+                      "visit_id": widget.item.id,
+                      "treatments": data,
+                    }).then((result) {
+                      setState(() => isLoading = false);
+                      if (result != null) {
+                        EasyLoading.showSuccess(
+                          "Visite mise à jour avec succès !",
+                        );
+                        Navigator.pop(context);
+                      }
+                    });
+                  },
+                  label: 'Valider & sauvegarder',
+                ),
+              ),
+            )
+        ],
+      ),
+    );
+  }
+
   Widget patientInfo(BuildContext context) {
     return SizedBox(
       height: 140,
       width: MediaQuery.of(context).size.width,
-      child: Card(
-        margin: EdgeInsets.zero,
+      child: Container(
+        decoration: BoxDecoration(color: Colors.indigo.shade500),
         child: Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.all(10.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -168,7 +213,7 @@ class _PatientTraitmentPageState extends State<PatientTraitmentPage> {
                     height: 50.0,
                     width: 50.0,
                     decoration: BoxDecoration(
-                      color: Colors.indigo.shade300,
+                      color: Colors.indigo.shade200,
                       borderRadius: BorderRadius.circular(5.0),
                     ),
                     child: Row(
@@ -176,10 +221,10 @@ class _PatientTraitmentPageState extends State<PatientTraitmentPage> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         SvgPicture.asset(
-                          "assets/svg/profile.svg",
+                          "assets/svg/patient.svg",
                           height: 24.0,
                           colorFilter: const ColorFilter.mode(
-                            Colors.white,
+                            Colors.indigo,
                             BlendMode.srcIn,
                           ),
                         ),
@@ -197,7 +242,7 @@ class _PatientTraitmentPageState extends State<PatientTraitmentPage> {
                         Text(
                           "Gaston delimond".toUpperCase(),
                           style: const TextStyle(
-                            color: Colors.black,
+                            color: Colors.white,
                             fontFamily: 'Poppins',
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
@@ -208,7 +253,7 @@ class _PatientTraitmentPageState extends State<PatientTraitmentPage> {
                             SvgPicture.asset(
                               "assets/svg/location-place.svg",
                               colorFilter: const ColorFilter.mode(
-                                Colors.black,
+                                Colors.white,
                                 BlendMode.srcIn,
                               ),
                               height: 20,
@@ -222,7 +267,7 @@ class _PatientTraitmentPageState extends State<PatientTraitmentPage> {
                                 textScaleFactor: .8,
                                 style: TextStyle(
                                   fontSize: 12.0,
-                                  color: Colors.grey.shade800,
+                                  color: Colors.grey.shade200,
                                   fontWeight: FontWeight.w400,
                                 ),
                               ),
@@ -235,7 +280,7 @@ class _PatientTraitmentPageState extends State<PatientTraitmentPage> {
                 ],
               ),
               SizedBox(
-                height: 50.0,
+                height: 40.0,
                 width: MediaQuery.of(context).size.width,
                 child: OutlinedButton(
                   onPressed: () {
@@ -247,23 +292,28 @@ class _PatientTraitmentPageState extends State<PatientTraitmentPage> {
                           ),
                         ),
                         builder: (context) {
-                          for (var i in infirmiers) {
+                          /* for (var i in infirmiers) {
                             i.isSelected = false;
                           }
-                          return infirmiersBottomSheet(context);
+                          return infirmiersBottomSheet(context); */
+                          return Container();
                         });
                   },
                   style: OutlinedButton.styleFrom(
                     side: BorderSide(
-                      color: Colors.indigo.shade400,
+                      color: Colors.indigo.shade200,
                       width: 1.5,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.0),
                     ),
                   ),
                   child: Text(
                     "Déléguer la visite à un collègue".toUpperCase(),
-                    style: const TextStyle(
-                      color: Colors.indigo,
-                      fontWeight: FontWeight.w600,
+                    style: TextStyle(
+                      color: Colors.indigo.shade200,
+                      fontSize: 12.0,
+                      fontWeight: FontWeight.w700,
                       fontFamily: 'Poppins',
                       letterSpacing: 1,
                     ),
@@ -329,8 +379,9 @@ class _PatientTraitmentPageState extends State<PatientTraitmentPage> {
                 ),
                 onPressed: () {
                   if (txtLibelle.text.isNotEmpty) {
-                    var soin = Soin(libelle: txtLibelle.text);
-                    soin.selected = true;
+                    var soin =
+                        Treatment(patientTreatmentLibelle: txtLibelle.text);
+                    soin.patientTreatmentStatus = "done";
                     setState(() {
                       widget.soins.add(soin);
                       txtLibelle.clear();
@@ -371,7 +422,7 @@ class _PatientTraitmentPageState extends State<PatientTraitmentPage> {
             const SizedBox(
               height: 8.0,
             ),
-            for (var infirmier in infirmiers) ...[
+            /* for (var infirmier in infirmiers) ...[
               NurseCard(
                 item: infirmier,
                 selected: infirmier.isSelected,
@@ -391,7 +442,7 @@ class _PatientTraitmentPageState extends State<PatientTraitmentPage> {
                   }
                 },
               ),
-            ],
+            ], */
             if (selectedInf != null) ...[
               const SizedBox(
                 height: 5.0,
@@ -638,7 +689,7 @@ class NurseCard extends StatelessWidget {
 class TaskCard extends StatelessWidget {
   final VoidCallback? onSelected;
   final bool selected;
-  final Soin soin;
+  final Treatment soin;
   const TaskCard({
     super.key,
     this.onSelected,
@@ -713,7 +764,7 @@ class TaskCard extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              soin.libelle!,
+                              soin.patientTreatmentLibelle!,
                               textAlign: TextAlign.start,
                               textScaleFactor: .8,
                               style: TextStyle(

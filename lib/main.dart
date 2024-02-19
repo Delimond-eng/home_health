@@ -5,10 +5,13 @@ import 'package:get/get.dart';
 import 'package:home_health/controllers/auth_controller.dart';
 import 'package:home_health/controllers/data_controller.dart';
 import './views/screens/starting_screen.dart';
+import 'controllers/nurse_data_controller.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   Get.put(AuthController());
   Get.put(DataController());
+  Get.put(NurseDataController());
   runApp(const MyApp());
 }
 

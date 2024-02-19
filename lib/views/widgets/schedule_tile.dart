@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-class ScheduleTile extends StatelessWidget {
-  final Schedule item;
-  const ScheduleTile({super.key, required this.isLast, required this.item});
+import '../../models/nurse_home.dart';
+
+class ScheduleTileDelegate extends StatelessWidget {
+  final Delegate item;
+  const ScheduleTileDelegate(
+      {super.key, required this.isLast, required this.item});
   final bool isLast;
 
   @override
@@ -25,7 +28,7 @@ class ScheduleTile extends StatelessWidget {
                     children: [
                       Flexible(
                         child: Text(
-                          item.title!,
+                          item.visit!.patient!.patientFullname!,
                           style: const TextStyle(
                             color: Colors.black,
                             fontFamily: 'Poppins',
@@ -58,7 +61,7 @@ class ScheduleTile extends StatelessWidget {
                           ),
                           Flexible(
                             child: Text(
-                              item.adresse!,
+                              item.visit!.patient!.patientAddress!,
                               textScaleFactor: .8,
                               style: const TextStyle(
                                 fontSize: 15.0,
@@ -140,7 +143,7 @@ class ScheduleTile extends StatelessWidget {
                                         width: 5.0,
                                       ),
                                       Text(
-                                        item.dateHour!,
+                                        item.visit!.visitDate!,
                                         style: const TextStyle(
                                           color: Colors.black,
                                           fontFamily: 'Poppins',
@@ -168,9 +171,9 @@ class ScheduleTile extends StatelessWidget {
           child: Container(
             height: 125.0,
             width: 4.0,
-            decoration: BoxDecoration(
-              color: item.color!.shade400,
-              borderRadius: const BorderRadius.horizontal(
+            decoration: const BoxDecoration(
+              color: Colors.blue,
+              borderRadius: BorderRadius.horizontal(
                 left: Radius.circular(4.0),
               ),
             ),
@@ -178,6 +181,18 @@ class ScheduleTile extends StatelessWidget {
         ),
       ],
     );
+  }
+
+  Color getColor(String status) {
+    if (status == 'pending') {
+      return Colors.grey;
+    } else if (status == 'completed') {
+      return Colors.green;
+    } else if (status == 'delegate') {
+      return Colors.blue;
+    } else {
+      return Colors.red;
+    }
   }
 }
 

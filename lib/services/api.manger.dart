@@ -1,6 +1,7 @@
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:home_health/global/controllers.dart';
 import 'package:home_health/global/storage.dart';
+import 'package:home_health/models/nurse_home.dart';
 import 'package:home_health/services/api.dart';
 
 import '../models/nurse.dart';
@@ -158,5 +159,38 @@ class ApiManager {
       data = VisitModel.fromJson(response);
     }
     return data;
+  }
+
+  //Permet à l'Infirmier d'avoir un accès à ses données d'accueil
+  static Future<NurseHomeModel> viewNurseHomeData() async {
+    var user = authController.user.value;
+    var homeData = NurseHomeModel();
+    var response = await Api.request("/nurse.agenda/${user.id}");
+    if (response.containsKey("status")) {
+      homeData = NurseHomeModel.fromJson(response);
+    }
+    return homeData;
+  }
+
+  static Future completVisit({Map<String, dynamic>? data}) async {
+    //Recupere la session de l'utilisateur courant !
+    var user = authController.user.value;
+
+    //Lance la requete d'enregistrement de l'infirmier
+    var res = await Api.request("/visit.validate", method: "post", body: {
+      "visit_id": data!["visit_id"],
+      "treatments": data["treatments"],
+      "nurse_id": user.id
+    });
+    if (res.containsKey("errors")) {
+      EasyLoading.showInfo(res["errors"].toString());
+      return null;
+    }
+    if (res.containsKey("status")) {
+      nurseDataController.viewHomeData();
+      return res;
+    } else {
+      return null;
+    }
   }
 }

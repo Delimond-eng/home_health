@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:home_health/models/schedule.dart';
 import 'package:home_health/views/pages/patient_traitment_page.dart';
 
 class MedicDocItemList extends StatelessWidget {
-  final Patient item;
+  final Visit item;
   const MedicDocItemList({super.key, required this.item});
 
   @override
@@ -23,7 +24,8 @@ class MedicDocItemList extends StatelessWidget {
                 context,
                 MaterialPageRoute(
                   builder: (context) => PatientTraitmentPage(
-                    soins: item.soins!,
+                    soins: item.treatments!,
+                    item: item,
                   ),
                 ),
               );
@@ -46,7 +48,8 @@ class MedicDocItemList extends StatelessWidget {
                               borderRadius: BorderRadius.circular(
                                 30,
                               ),
-                              color: item.color!,
+                              color:
+                                  buildColor(item.visitStatus!.toLowerCase()),
                               border: Border.all(
                                 color: Colors.white,
                                 width: 2.0,
@@ -66,7 +69,7 @@ class MedicDocItemList extends StatelessWidget {
                             width: 8.0,
                           ),
                           Text(
-                            item.nom!,
+                            item.patient!.patientFullname!,
                             style: const TextStyle(
                               fontFamily: 'Poppins',
                               fontSize: 15.0,
@@ -91,7 +94,7 @@ class MedicDocItemList extends StatelessWidget {
                           ),
                           Flexible(
                             child: Text(
-                              item.adresse!,
+                              item.patient!.patientAddress!,
                               textScaleFactor: .8,
                               style: TextStyle(
                                 fontSize: 14.0,
@@ -168,7 +171,7 @@ class MedicDocItemList extends StatelessWidget {
                                     width: 5.0,
                                   ),
                                   Text(
-                                    item.dateHour!,
+                                    item.visitDate!,
                                     style: const TextStyle(
                                       color: Colors.black,
                                       fontFamily: 'Poppins',
@@ -192,18 +195,16 @@ class MedicDocItemList extends StatelessWidget {
       ),
     );
   }
-}
 
-class Patient {
-  String? nom;
-  String? adresse, dateHour;
-  MaterialColor? color;
-  List<Soin>? soins;
-  Patient({this.nom, this.adresse, this.color, this.dateHour, this.soins});
-}
-
-class Soin {
-  String? libelle;
-  bool selected = false;
-  Soin({this.libelle});
+  Color buildColor(String status) {
+    if (status == 'pending') {
+      return Colors.grey;
+    } else if (status == "delegated") {
+      return Colors.blue;
+    } else if (status == "completed") {
+      return Colors.green;
+    } else {
+      return Colors.red;
+    }
+  }
 }

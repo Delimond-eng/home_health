@@ -1,8 +1,8 @@
 import 'package:easy_date_timeline/easy_date_timeline.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:home_health/data/mock_data.dart';
-import '../widgets/schedule_tile.dart';
+import 'package:home_health/global/controllers.dart';
+import '../../models/schedule.dart';
 import '../widgets/user_avatar.dart';
 
 class ScheduleNursePage extends StatefulWidget {
@@ -66,11 +66,11 @@ class _ScheduleNursePageState extends State<ScheduleNursePage> {
           Expanded(
             child: ListView.separated(
               padding: const EdgeInsets.all(8.0),
-              itemCount: schedules.length,
+              itemCount: nurseDataController.visits.length,
               shrinkWrap: true,
               physics: const BouncingScrollPhysics(),
               itemBuilder: (context, index) {
-                var item = schedules[index];
+                var item = nurseDataController.visits[index];
                 return ScheduleCard(item: item);
               },
               separatorBuilder: (__, _) => const SizedBox(height: 5.0),
@@ -142,7 +142,7 @@ class _ScheduleNursePageState extends State<ScheduleNursePage> {
 }
 
 class ScheduleCard extends StatelessWidget {
-  final Schedule item;
+  final Visit item;
   const ScheduleCard({super.key, required this.item});
 
   @override
@@ -164,7 +164,7 @@ class ScheduleCard extends StatelessWidget {
                     children: [
                       Flexible(
                         child: Text(
-                          item.title!,
+                          item.nurse!.nurseFullname!,
                           style: const TextStyle(
                             color: Colors.black,
                             fontFamily: 'Poppins',
@@ -197,7 +197,7 @@ class ScheduleCard extends StatelessWidget {
                           ),
                           Flexible(
                             child: Text(
-                              item.adresse!,
+                              item.patient!.patientAddress!,
                               textScaleFactor: .8,
                               style: const TextStyle(
                                 fontSize: 15.0,
@@ -234,10 +234,10 @@ class ScheduleCard extends StatelessWidget {
                                         width: 5.0,
                                       ),
                                       Text(
-                                        item.dateHour!,
+                                        item.visitDate!,
                                         textScaleFactor: .8,
-                                        style: TextStyle(
-                                          color: item.color,
+                                        style: const TextStyle(
+                                          color: Colors.black,
                                           fontFamily: 'Poppins',
                                           fontSize: 14,
                                           fontWeight: FontWeight.w600,
@@ -264,7 +264,7 @@ class ScheduleCard extends StatelessWidget {
             height: 120.0,
             width: 4.0,
             decoration: BoxDecoration(
-              color: item.color!.shade400,
+              color: getColor(item.visitStatus!.toLowerCase()),
               borderRadius: const BorderRadius.horizontal(
                 left: Radius.circular(4.0),
               ),
@@ -273,5 +273,17 @@ class ScheduleCard extends StatelessWidget {
         ),
       ],
     );
+  }
+
+  Color getColor(String status) {
+    if (status == 'pending') {
+      return Colors.grey;
+    } else if (status == 'completed') {
+      return Colors.green;
+    } else if (status == 'delegate') {
+      return Colors.blue;
+    } else {
+      return Colors.red;
+    }
   }
 }

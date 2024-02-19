@@ -178,6 +178,7 @@ class _StartingScreenState extends State<StartingScreen> {
                       setState(() => loginLoading = false);
                       if (res != null) {
                         if (res["profile"].toString() == "nurse") {
+                          nurseDataController.viewHomeData();
                           Navigator.pushAndRemoveUntil(
                             context,
                             MaterialPageRoute(
