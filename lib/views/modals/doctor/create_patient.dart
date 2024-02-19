@@ -5,14 +5,16 @@ import 'package:home_health/global/controllers.dart';
 import 'package:home_health/services/api.manger.dart';
 
 import '../../../utils/costum_modal.dart';
+import '../../widgets/custom_checkbox.dart';
 import '../../widgets/login_field.dart';
 import '../../widgets/submit_button_loader.dart';
 
-void showCreateNurseModal(BuildContext context) {
+void showCreatePatientModal(BuildContext context) {
   bool isLoading = false;
+  bool isMale = false;
+  bool isFemale = false;
   final TextEditingController txtName = TextEditingController();
   final TextEditingController txtPhone = TextEditingController();
-  final TextEditingController txtEmail = TextEditingController();
   final TextEditingController txtAddress = TextEditingController();
   return showCustomModal(
     context,
@@ -38,59 +40,100 @@ void showCreateNurseModal(BuildContext context) {
             height: 10,
           ),
           LoginField(
-            icon: "email",
-            hintText: "Adresse email... *",
-            controller: txtEmail,
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          LoginField(
             icon: "map-pin",
             hintText: "Adresse du patient... *",
             controller: txtAddress,
           ),
-          const SizedBox(
-            height: 10,
-          ),
           StatefulBuilder(builder: (context, setter) {
-            return SizedBox(
-              height: 50.0,
-              width: MediaQuery.of(context).size.width,
-              child: SubmitBtnLoader(
-                isLoading: isLoading,
-                label: "Sauvegarder",
-                color: Colors.green,
-                onPressed: () {
-                  if (txtName.text.isEmpty) {
-                    EasyLoading.showToast(
-                        "Nom complet du patient est requis !");
-                    return;
-                  }
-                  if (txtPhone.text.isEmpty) {
-                    EasyLoading.showToast("Numéro de téléphone requis !");
-                    return;
-                  }
-                  if (txtAddress.text.isEmpty) {
-                    EasyLoading.showToast("L'adresse du patient est requis !");
-                    return;
-                  }
-                  setter(() => isLoading = true);
-                  ApiManager.createPatient(data: {
-                    "fullname": txtName.text,
-                    "address": txtAddress.text,
-                    "phone": txtPhone.text
-                  }).then((result) {
-                    if (result != null) {
-                      EasyLoading.showSuccess(
-                        "Le Patient a été créé avec succès !",
-                      );
-                      dataController.initDoctorData();
-                      Get.back();
-                    }
-                  });
-                },
-              ),
+            return Column(
+              children: [
+                const SizedBox(
+                  height: 15.0,
+                ),
+                Row(
+                  children: [
+                    const Text(
+                      "Sexe *",
+                      style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 10.0,
+                    ),
+                    CustomCheckbox(
+                      title: "Masculin",
+                      isChecked: isMale,
+                      onChecked: () {
+                        setter(() {
+                          isMale = !isMale;
+                          isFemale = false;
+                        });
+                      },
+                    ),
+                    const SizedBox(
+                      width: 10.0,
+                    ),
+                    CustomCheckbox(
+                      title: "Féminin",
+                      isChecked: isFemale,
+                      onChecked: () {
+                        setter(() {
+                          isFemale = !isFemale;
+                          isMale = false;
+                        });
+                      },
+                    ),
+                  ],
+                ),
+                const SizedBox(
+                  height: 15.0,
+                ),
+                SizedBox(
+                  height: 50.0,
+                  width: MediaQuery.of(context).size.width,
+                  child: SubmitBtnLoader(
+                    isLoading: isLoading,
+                    label: "Sauvegarder",
+                    color: Colors.green,
+                    onPressed: () {
+                      if (txtName.text.isEmpty) {
+                        EasyLoading.showToast(
+                            "Nom complet du patient est requis !");
+                        return;
+                      }
+                      if (txtPhone.text.isEmpty) {
+                        EasyLoading.showToast("Numéro de téléphone requis !");
+                        return;
+                      }
+                      if (txtAddress.text.isEmpty) {
+                        EasyLoading.showToast(
+                            "L'adresse du patient est requis !");
+                        return;
+                      }
+                      if (!isMale && !isFemale) {
+                        EasyLoading.showToast("Le sexe du patient requis !");
+                        return;
+                      }
+                      setter(() => isLoading = true);
+                      ApiManager.createPatient(data: {
+                        "fullname": txtName.text,
+                        "address": txtAddress.text,
+                        "phone": txtPhone.text,
+                        "gender": isMale ? "M" : "F"
+                      }).then((result) {
+                        if (result != null) {
+                          EasyLoading.showSuccess(
+                            "Le Patient a été créé avec succès !",
+                          );
+                          dataController.initDoctorData();
+                          Get.back();
+                        }
+                      });
+                    },
+                  ),
+                )
+              ],
             );
           })
         ],

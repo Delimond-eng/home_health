@@ -1,6 +1,9 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:home_health/global/controllers.dart';
+import 'package:home_health/views/pages/patient_page.dart';
+import 'package:home_health/views/pages/schedule_doctor_page.dart';
 
 import '../../pages/home_doctor_page.dart';
 
@@ -15,12 +18,8 @@ class _DoctorHomeState extends State<DoctorHome> {
   int currentPage = 0;
   final List<Widget> _pages = [
     const HomeDoctorPage(),
-    const Center(
-      child: Text("Patients"),
-    ),
-    const Center(
-      child: Text("Nurses"),
-    ),
+    const PagePatient(),
+    const DoctorSchedulePage(),
     const Center(
       child: Text("Profil"),
     ),
@@ -65,11 +64,10 @@ class _DoctorHomeState extends State<DoctorHome> {
             label: "Acceuil",
           ),
           BottomNavigationBarItem(
-            icon:
-                SvgPicture.asset("assets/svg/group-patients.svg", height: 22.0),
+            icon: SvgPicture.asset("assets/svg/patient.svg", height: 22.0),
             activeIcon: JelloIn(
               child: SvgPicture.asset(
-                "assets/svg/group-patients.svg",
+                "assets/svg/patient.svg",
                 height: 22.0,
                 colorFilter:
                     const ColorFilter.mode(Colors.indigo, BlendMode.srcIn),
@@ -78,16 +76,16 @@ class _DoctorHomeState extends State<DoctorHome> {
             label: "Patients",
           ),
           BottomNavigationBarItem(
-            icon: SvgPicture.asset("assets/svg/nurse.svg", height: 22.0),
+            icon: SvgPicture.asset("assets/svg/calendar.svg", height: 22.0),
             activeIcon: JelloIn(
               child: SvgPicture.asset(
-                "assets/svg/nurse.svg",
+                "assets/svg/calendar.svg",
                 height: 22.0,
                 colorFilter:
                     const ColorFilter.mode(Colors.indigo, BlendMode.srcIn),
               ),
             ),
-            label: "Infirmiers",
+            label: "Mes visites",
           ),
           BottomNavigationBarItem(
             icon: SvgPicture.asset("assets/svg/profile.svg"),
@@ -101,6 +99,7 @@ class _DoctorHomeState extends State<DoctorHome> {
         ],
         currentIndex: currentPage,
         onTap: (index) {
+          dataController.initDoctorData();
           setState(() {
             currentPage = index;
           });

@@ -1,4 +1,4 @@
-import 'package:date_picker_timeline/date_picker_timeline.dart';
+import 'package:easy_date_timeline/easy_date_timeline.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:home_health/data/mock_data.dart';
@@ -21,14 +21,46 @@ class _ScheduleNursePageState extends State<ScheduleNursePage> {
           _header(context),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 8.0),
-            child: DatePicker(
-              DateTime.now(),
-              initialSelectedDate: DateTime.now(),
-              selectionColor: Colors.indigo,
-              selectedTextColor: Colors.white,
-              height: 90.0,
+            child: EasyDateTimeLine(
+              initialDate: DateTime.now(),
+              onDateChange: (selectedDate) {
+                //`selectedDate` the new date selected.
+              },
+              headerProps: const EasyHeaderProps(
+                monthPickerType: MonthPickerType.switcher,
+                dateFormatter: DateFormatter.fullDateDMY(),
+              ),
+              dayProps: EasyDayProps(
+                dayStructure: DayStructure.dayStrDayNum,
+                activeDayStyle: const DayStyle(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(8)),
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        Colors.indigo,
+                        Color(0xff3371FF),
+                      ],
+                    ),
+                  ),
+                ),
+                todayStyle: DayStyle(
+                  decoration: BoxDecoration(
+                    borderRadius: const BorderRadius.all(Radius.circular(8)),
+                    border: Border.all(color: Colors.indigo),
+                    color: Colors.white,
+                  ),
+                ),
+                inactiveDayStyle: DayStyle(
+                  decoration: BoxDecoration(
+                    borderRadius: const BorderRadius.all(Radius.circular(8)),
+                    border: Border.all(color: Colors.grey.shade300),
+                    color: Colors.white,
+                  ),
+                ),
+              ),
               locale: 'Fr',
-              onDateChange: (date) {},
             ),
           ),
           Expanded(
@@ -79,7 +111,7 @@ class _ScheduleNursePageState extends State<ScheduleNursePage> {
                 Row(
                   children: [
                     SvgPicture.asset(
-                      "assets/svg/calendarr.svg",
+                      "assets/svg/calendar.svg",
                       height: 25.0,
                       colorFilter: ColorFilter.mode(
                         Colors.indigo.shade200,
@@ -94,7 +126,7 @@ class _ScheduleNursePageState extends State<ScheduleNursePage> {
                       style: TextStyle(
                         fontSize: 22.0,
                         color: Colors.white,
-                        fontWeight: FontWeight.w700,
+                        fontWeight: FontWeight.w600,
                       ),
                     )
                   ],

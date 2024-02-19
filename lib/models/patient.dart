@@ -1,17 +1,15 @@
-import 'patient.dart';
-
-class NurseModel {
+class PatientModel {
   String? status;
-  List<Nurse>? nurses;
+  List<Patient>? patients;
 
-  NurseModel({this.status, this.nurses});
+  PatientModel({this.status, this.patients});
 
-  NurseModel.fromJson(Map<String, dynamic> json) {
+  PatientModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
-    if (json['nurses'] != null) {
-      nurses = <Nurse>[];
-      json['nurses'].forEach((v) {
-        nurses!.add(Nurse.fromJson(v));
+    if (json['patients'] != null) {
+      patients = <Patient>[];
+      json['patients'].forEach((v) {
+        patients!.add(Patient.fromJson(v));
       });
     }
   }
@@ -19,43 +17,46 @@ class NurseModel {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['status'] = status;
-    if (nurses != null) {
-      data['nurses'] = nurses!.map((v) => v.toJson()).toList();
+    if (patients != null) {
+      data['patients'] = patients!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
-class Nurse {
+class Patient {
   int? id;
-  String? nurseFullname;
-  String? nursePhone;
-  String? nurseStatus;
-  String? nurseCreatedAt;
+  String? patientFullname;
+  String? patientPhone;
+  String? patientAddress;
+  String? patientGender;
+  String? patientStatus;
   int? doctorId;
-  User? user;
+  String? patientCreatedAt;
   Doctor? doctor;
   List<Visits>? visits;
 
-  Nurse(
+  Patient(
       {this.id,
-      this.nurseFullname,
-      this.nursePhone,
-      this.nurseStatus,
-      this.nurseCreatedAt,
+      this.patientFullname,
+      this.patientPhone,
+      this.patientAddress,
+      this.patientGender,
+      this.patientStatus,
       this.doctorId,
-      this.user,
+      this.patientCreatedAt,
       this.doctor,
       this.visits});
 
-  Nurse.fromJson(Map<String, dynamic> json) {
+  Patient.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    nurseFullname = json['nurse_fullname'];
-    nursePhone = json['nurse_phone'];
-    nurseStatus = json['nurse_status'];
-    nurseCreatedAt = json['nurse_created_at'];
+    patientFullname = json['patient_fullname'];
+    patientPhone = json['patient_phone'];
+    patientAddress = json['patient_address'];
+    patientGender = json['patient_gender'];
+    patientStatus = json['patient_status'];
     doctorId = json['doctor_id'];
-    user = json['user'] != null ? User.fromJson(json['user']) : null;
+    patientCreatedAt = json['patient_created_at'];
     doctor = json['doctor'] != null ? Doctor.fromJson(json['doctor']) : null;
     if (json['visits'] != null) {
       visits = <Visits>[];
@@ -68,14 +69,13 @@ class Nurse {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['id'] = id;
-    data['nurse_fullname'] = nurseFullname;
-    data['nurse_phone'] = nursePhone;
-    data['nurse_status'] = nurseStatus;
-    data['nurse_created_at'] = nurseCreatedAt;
+    data['patient_fullname'] = patientFullname;
+    data['patient_phone'] = patientPhone;
+    data['patient_address'] = patientAddress;
+    data['patient_gender'] = patientGender;
+    data['patient_status'] = patientStatus;
     data['doctor_id'] = doctorId;
-    if (user != null) {
-      data['user'] = user!.toJson();
-    }
+    data['patient_created_at'] = patientCreatedAt;
     if (doctor != null) {
       data['doctor'] = doctor!.toJson();
     }
@@ -87,44 +87,7 @@ class Nurse {
 
   @override
   String toString() {
-    return nurseFullname!;
-  }
-}
-
-class User {
-  int? id;
-  String? email;
-  String? password;
-  int? profileId;
-  String? profileType;
-  String? userCreatedAt;
-
-  User(
-      {this.id,
-      this.email,
-      this.password,
-      this.profileId,
-      this.profileType,
-      this.userCreatedAt});
-
-  User.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    email = json['email'];
-    password = json['password'];
-    profileId = json['profile_id'];
-    profileType = json['profile_type'];
-    userCreatedAt = json['user_created_at'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['id'] = id;
-    data['email'] = email;
-    data['password'] = password;
-    data['profile_id'] = profileId;
-    data['profile_type'] = profileType;
-    data['user_created_at'] = userCreatedAt;
-    return data;
+    return patientFullname!;
   }
 }
 
@@ -176,7 +139,7 @@ class Visits {
   int? nurseId;
   String? visitStatus;
   String? visitCreatedAt;
-  Patient? patient;
+  List<Treatment>? treatments;
 
   Visits(
       {this.id,
@@ -185,7 +148,7 @@ class Visits {
       this.nurseId,
       this.visitStatus,
       this.visitCreatedAt,
-      this.patient});
+      this.treatments});
 
   Visits.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -194,8 +157,12 @@ class Visits {
     nurseId = json['nurse_id'];
     visitStatus = json['visit_status'];
     visitCreatedAt = json['visit_created_at'];
-    patient =
-        json['patient'] != null ? Patient.fromJson(json['patient']) : null;
+    if (json['treatments'] != null) {
+      treatments = <Treatment>[];
+      json['treatments'].forEach((v) {
+        treatments!.add(Treatment.fromJson(v));
+      });
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -206,9 +173,42 @@ class Visits {
     data['nurse_id'] = nurseId;
     data['visit_status'] = visitStatus;
     data['visit_created_at'] = visitCreatedAt;
-    if (patient != null) {
-      data['patient'] = patient!.toJson();
+    if (treatments != null) {
+      data['treatments'] = treatments!.map((v) => v.toJson()).toList();
     }
+    return data;
+  }
+}
+
+class Treatment {
+  int? id;
+  String? patientTreatmentLibelle;
+  String? patientTreatmentStatus;
+  int? visitId;
+  String? patientTreatmentCreatedAt;
+
+  Treatment(
+      {this.id,
+      this.patientTreatmentLibelle,
+      this.patientTreatmentStatus,
+      this.visitId,
+      this.patientTreatmentCreatedAt});
+
+  Treatment.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    patientTreatmentLibelle = json['patient_treatment_libelle'];
+    patientTreatmentStatus = json['patient_treatment_status'];
+    visitId = json['visit_id'];
+    patientTreatmentCreatedAt = json['patient_treatment_created_at'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['patient_treatment_libelle'] = patientTreatmentLibelle;
+    data['patient_treatment_status'] = patientTreatmentStatus;
+    data['visit_id'] = visitId;
+    data['patient_treatment_created_at'] = patientTreatmentCreatedAt;
     return data;
   }
 }

@@ -4,6 +4,8 @@ import 'package:home_health/global/storage.dart';
 import 'package:home_health/services/api.dart';
 
 import '../models/nurse.dart';
+import '../models/patient.dart';
+import '../models/schedule.dart';
 
 class ApiManager {
   /// Make login and return result
@@ -97,6 +99,7 @@ class ApiManager {
       "name": data["fullname"],
       "phone": data["phone"],
       "address": data["address"],
+      "gender": data["gender"],
       "doctor_id": user.id
     });
     if (res.containsKey("errors")) {
@@ -112,12 +115,47 @@ class ApiManager {
   }
 
   //Permet au medecin de voir ses patients créés dans le système
-  static Future<NurseModel> viewAllPatientsForDoctor() async {
-    var data = NurseModel();
+  static Future<PatientModel> viewAllPatientsForDoctor() async {
+    var data = PatientModel();
     var user = authController.user.value;
     var response = await Api.request("/patients.all/${user.id}");
     if (response.containsKey("status")) {
-      data = NurseModel.fromJson(response);
+      data = PatientModel.fromJson(response);
+    }
+    return data;
+  }
+
+  static Future createSchedule({Map<String, dynamic>? data}) async {
+    //Recupere la session de l'utilisateur courant !
+    var user = authController.user.value;
+
+    //Lance la requete d'enregistrement de l'infirmier
+    var res = await Api.request("/visit.create", method: "post", body: {
+      "visit_date": data!["date"],
+      "nurse_id": data["nurse_id"],
+      "patient_id": data["patient_id"],
+      "doctor_id": user.id,
+      "treatments": data["treatments"]
+    });
+    if (res.containsKey("errors")) {
+      EasyLoading.showInfo(res["errors"].toString());
+      return null;
+    }
+    if (res.containsKey("status")) {
+      dataController.initDoctorData();
+      return res;
+    } else {
+      return null;
+    }
+  }
+
+  //Permet au medecin de voir toutes ses visites
+  static Future<VisitModel> viewAllVisitsForDoctor() async {
+    var data = VisitModel();
+    var user = authController.user.value;
+    var response = await Api.request("/doctor.visites/${user.id}");
+    if (response.containsKey("status")) {
+      data = VisitModel.fromJson(response);
     }
     return data;
   }

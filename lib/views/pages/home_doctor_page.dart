@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:home_health/global/controllers.dart';
+import 'package:home_health/views/modals/doctor/create_patient.dart';
 
 import '../modals/doctor/create_nurse.dart';
 import '../widgets/heading_title.dart';
 import '../widgets/menu_btn_action.dart';
 import '../widgets/nurse_card.dart';
 import '../widgets/user_avatar.dart';
-import 'patient_fiche_creating.dart';
+import 'schedule_creating.dart';
 
 class HomeDoctorPage extends StatefulWidget {
   const HomeDoctorPage({super.key});
@@ -49,13 +50,7 @@ class _HomeDoctorPageState extends State<HomeDoctorPage> {
                         children: [
                           MenuBtnAction(
                             onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      const PatientFicheCreating(),
-                                ),
-                              );
+                              showCreatePatientModal(context);
                             },
                             color: Colors.indigo,
                             title: "Création de la fiche patient",
@@ -84,7 +79,15 @@ class _HomeDoctorPageState extends State<HomeDoctorPage> {
                             ),
                           ),
                           MenuBtnAction(
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      const ScheduleCreating(),
+                                ),
+                              );
+                            },
                             color: Colors.indigo,
                             title: "Création agenda infirmier",
                             icon: "calendar-today.svg",
@@ -127,22 +130,59 @@ class _HomeDoctorPageState extends State<HomeDoctorPage> {
                       height: 10.0,
                     ),
                     Obx(
-                      () => Card(
-                        margin: EdgeInsets.zero,
-                        child: ListView.builder(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          padding: const EdgeInsets.all(5.0),
-                          itemCount: dataController.nurses.length,
-                          itemBuilder: (context, index) {
-                            var item = dataController.nurses[index];
-                            return NurseCard(
-                              isLast: index == dataController.nurses.length - 1,
-                              item: item,
-                            );
-                          },
-                        ),
-                      ),
+                      () => dataController.nurses.isEmpty
+                          ? Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 50.0),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  const Text(
+                                    "Aucun médecin repertorié vous !",
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontSize: 16.0,
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  ),
+                                  const Text(
+                                    "Veuillez créer vos infirmier pour les visites à domicile de vos patients !",
+                                    textAlign: TextAlign.center,
+                                  ),
+                                  const SizedBox(
+                                    height: 15.0,
+                                  ),
+                                  ElevatedButton.icon(
+                                    onPressed: () {
+                                      showCreateNurseModal(context);
+                                    },
+                                    icon: const Icon(
+                                      Icons.add,
+                                      size: 17.0,
+                                    ),
+                                    label: const Text("Créer infirmier"),
+                                  )
+                                ],
+                              ),
+                            )
+                          : Card(
+                              margin: EdgeInsets.zero,
+                              child: ListView.builder(
+                                shrinkWrap: true,
+                                physics: const NeverScrollableScrollPhysics(),
+                                padding: const EdgeInsets.all(5.0),
+                                itemCount: dataController.nurses.length,
+                                itemBuilder: (context, index) {
+                                  var item = dataController.nurses[index];
+                                  return NurseCard(
+                                    isLast: index ==
+                                        dataController.nurses.length - 1,
+                                    item: item,
+                                  );
+                                },
+                              ),
+                            ),
                     )
                   ],
                 ),

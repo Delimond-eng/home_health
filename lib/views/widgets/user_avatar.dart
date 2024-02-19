@@ -31,7 +31,7 @@ class UserAvatar extends StatelessWidget {
           ),
           child: Container(
             decoration: BoxDecoration(
-              color: const Color.fromARGB(255, 5, 175, 104).withOpacity(.9),
+              color: Colors.indigo.shade900,
               shape: BoxShape.circle,
             ),
             child: Row(

@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-class LoginField extends StatelessWidget {
+class LoginField<T> extends StatelessWidget {
   final String hintText;
   final String icon;
   final bool isPassword;
+  final bool isDropdown;
+  final T? dropdownValue;
+  final List<T>? dropdownItems;
+  final Function(T? value)? onDropdownChanged;
   final TextEditingController? controller;
   const LoginField({
     super.key,
@@ -12,6 +16,10 @@ class LoginField extends StatelessWidget {
     required this.icon,
     this.isPassword = false,
     this.controller,
+    this.isDropdown = false,
+    this.dropdownValue,
+    this.dropdownItems,
+    this.onDropdownChanged,
   });
 
   @override
@@ -71,30 +79,84 @@ class LoginField extends StatelessWidget {
                         ),
                       )
                     ] else ...[
-                      Flexible(
-                        child: TextField(
-                          controller: controller,
-                          keyboardType: TextInputType.text,
-                          style: const TextStyle(
-                            fontFamily: 'Poppins',
-                            fontSize: 14.0,
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
-                          ),
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                            enabledBorder: InputBorder.none,
-                            focusedBorder: InputBorder.none,
-                            hintText: hintText,
-                            hintStyle: const TextStyle(
-                              color: Colors.grey,
-                              fontSize: 14.0,
-                              fontWeight: FontWeight.w400,
+                      if (isDropdown) ...[
+                        Expanded(
+                          child: DropdownButtonFormField<T>(
+                            menuMaxHeight: 300,
+                            dropdownColor: Colors.white,
+                            focusColor: Colors.white,
+                            isExpanded: true,
+                            alignment: Alignment.centerLeft,
+                            style: const TextStyle(
+                              fontFamily: 'Poppins',
+                              fontWeight: FontWeight.w500,
+                              color: Colors.black,
+                              fontSize: 12.0,
                             ),
-                            counterText: '',
+                            value: dropdownValue,
+                            hint: Text(
+                              hintText,
+                              style: const TextStyle(
+                                fontSize: 12.0,
+                              ),
+                            ),
+                            decoration: InputDecoration(
+                              border: InputBorder.none,
+                              enabledBorder: InputBorder.none,
+                              focusedBorder: InputBorder.none,
+                              hintStyle: TextStyle(
+                                fontFamily: 'Poppins',
+                                fontSize: 12.0,
+                                color: Colors.grey.shade400,
+                                fontWeight: FontWeight.w400,
+                              ),
+                              counterText: '',
+                            ),
+                            items: dropdownItems!.map((e) {
+                              return DropdownMenuItem(
+                                value: e,
+                                child: Text(
+                                  e.toString(),
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 14.0,
+                                    fontFamily: "Poppins",
+                                    color: Colors.black,
+                                  ),
+                                ),
+                              );
+                            }).toList(),
+                            onChanged: (value) {
+                              onDropdownChanged!.call(value);
+                            },
                           ),
-                        ),
-                      )
+                        )
+                      ] else ...[
+                        Flexible(
+                          child: TextField(
+                            controller: controller,
+                            keyboardType: TextInputType.text,
+                            style: const TextStyle(
+                              fontFamily: 'Poppins',
+                              fontSize: 14.0,
+                              color: Colors.black,
+                              fontWeight: FontWeight.w500,
+                            ),
+                            decoration: InputDecoration(
+                              border: InputBorder.none,
+                              enabledBorder: InputBorder.none,
+                              focusedBorder: InputBorder.none,
+                              hintText: hintText,
+                              hintStyle: const TextStyle(
+                                color: Colors.grey,
+                                fontSize: 14.0,
+                                fontWeight: FontWeight.w400,
+                              ),
+                              counterText: '',
+                            ),
+                          ),
+                        )
+                      ]
                     ]
                   ],
                 ),

@@ -47,10 +47,37 @@ class NurseCard extends StatelessWidget {
             ],
           ),
         ),
-        trailing: SvgPicture.asset(
-          "assets/svg/more.svg",
-          height: 26,
-          colorFilter: const ColorFilter.mode(Colors.blue, BlendMode.srcIn),
+        trailing: PopupMenuButton(
+          itemBuilder: (BuildContext context) {
+            return [
+              const PopupMenuItem(
+                value: 'detail',
+                child: Text(
+                  'Voir les rapports',
+                  style: TextStyle(fontSize: 12.0),
+                ),
+              ),
+              const PopupMenuItem(
+                value: 'delete',
+                child: Text(
+                  'Supprimer',
+                  style: TextStyle(fontSize: 12.0),
+                ),
+              ),
+            ];
+          },
+          icon: Container(
+            decoration: BoxDecoration(
+              color: Colors.grey.shade300,
+              borderRadius: BorderRadius.circular(5.0),
+            ),
+            padding: const EdgeInsets.all(2),
+            child: const Icon(Icons.more_horiz),
+          ),
+          onSelected: (value) {
+            // Handle menu item selection
+            print('Selected: $value');
+          },
         ),
       ),
     );
