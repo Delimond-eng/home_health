@@ -240,7 +240,7 @@ class _PatientTraitmentPageState extends State<PatientTraitmentPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "Gaston delimond".toUpperCase(),
+                          widget.item.patient!.patientFullname!.toUpperCase(),
                           style: const TextStyle(
                             color: Colors.white,
                             fontFamily: 'Poppins',
@@ -263,7 +263,7 @@ class _PatientTraitmentPageState extends State<PatientTraitmentPage> {
                             ),
                             Flexible(
                               child: Text(
-                                "0304, Tombalbay, Gombe Kinshasa, Ref. Station cobil",
+                                widget.item.patient!.patientAddress!,
                                 textScaleFactor: .8,
                                 style: TextStyle(
                                   fontSize: 12.0,

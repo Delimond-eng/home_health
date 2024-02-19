@@ -179,7 +179,7 @@ class DoctorScheduleCard extends StatelessWidget {
                     width: 4,
                   ),
                   Text(
-                    item.nurse!.nurseFullname!,
+                    item.patient!.patientFullname!,
                     textScaleFactor: .8,
                     style: const TextStyle(
                       fontSize: 14.0,
