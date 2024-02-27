@@ -207,6 +207,8 @@ class ScheduleCard extends StatelessWidget {
               child: InkWell(
                 borderRadius: BorderRadius.circular(4.0),
                 onTap: () {
+                  nurseDataController.selectScheduleTreatments.value =
+                      item.treatments!;
                   Navigator.push(
                     context,
                     MaterialPageRoute(
