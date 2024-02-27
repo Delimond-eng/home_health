@@ -99,7 +99,12 @@ class _NurseHomeState extends State<NurseHome> {
         ],
         currentIndex: currentPage,
         onTap: (index) {
-          nurseDataController.viewHomeData();
+          if (index == 0) {
+            nurseDataController.viewHomeData();
+          }
+          if (index == 1) {
+            nurseDataController.refreshSchedule();
+          }
           setState(() {
             currentPage = index;
           });

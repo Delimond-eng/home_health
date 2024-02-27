@@ -53,6 +53,7 @@ class CustomCheckbox extends StatelessWidget {
           ),
           Text(
             title!,
+            textScaleFactor: .9,
             style: TextStyle(
               fontWeight: FontWeight.w500,
               color: isChecked ? Colors.blue : Colors.black,

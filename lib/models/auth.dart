@@ -21,6 +21,7 @@ class Auth {
     id = data["id"];
     name = data["name"];
     phone = data["phone"];
+    email = data["email"];
     profile = data["profile"];
     status = data["status"];
     if (data["doctor_id"] != null) {

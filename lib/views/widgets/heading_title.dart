@@ -23,6 +23,7 @@ class HeadingTitle extends StatelessWidget {
           children: [
             Text(
               title,
+              textScaleFactor: .9,
               style: const TextStyle(
                 fontFamily: 'Poppins',
                 fontSize: 16.0,

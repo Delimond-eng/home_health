@@ -25,8 +25,15 @@ class NurseCard extends StatelessWidget {
       ),
       child: ListTile(
         contentPadding: const EdgeInsets.symmetric(horizontal: 5.0),
-        title: Text(item.nurseFullname!),
-        subtitle: const Text("Infirmier"),
+        title: Text(
+          item.nurseFullname!,
+          textScaleFactor: .8,
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        ),
+        subtitle: const Text(
+          "Infirmier",
+          textScaleFactor: .8,
+        ),
         leading: Container(
           height: 35.0,
           width: 35.0,

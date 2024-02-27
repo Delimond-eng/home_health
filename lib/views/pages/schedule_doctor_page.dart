@@ -1,10 +1,12 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:home_health/global/controllers.dart';
 
+import '../../models/nurse.dart';
 import '../../models/schedule.dart';
+import '../widgets/empty_loader.dart';
+import '../widgets/login_field.dart';
 import '../widgets/user_avatar.dart';
 
 class DoctorSchedulePage extends StatefulWidget {
@@ -15,26 +17,91 @@ class DoctorSchedulePage extends StatefulWidget {
 }
 
 class _DoctorSchedulePageState extends State<DoctorSchedulePage> {
+  Nurse? selectedNurse;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: [
-          _header(context),
-          Expanded(
-            child: Obx(
-              () => ListView.separated(
-                padding: const EdgeInsets.all(10.0),
-                itemCount: dataController.allVisits.length,
-                itemBuilder: (context, index) {
-                  var item = dataController.allVisits[index];
-                  return DoctorScheduleCard(item: item);
-                },
-                separatorBuilder: (__, _) => const SizedBox(height: 5.0),
+      body: Obx(
+        () => Column(
+          children: [
+            _header(context),
+            Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Row(
+                children: [
+                  Flexible(
+                    child: LoginField<Nurse>(
+                      icon: "filter-1",
+                      hintText: "Filtrez par infirmier...",
+                      dropdownItems: dataController.nurses,
+                      isDropdown: true,
+                      dropdownValue: selectedNurse,
+                      onDropdownChanged: (nurse) {
+                        dataController.viewAllVisitsByDoctor(
+                            nurseId: nurse!.id!);
+                      },
+                    ),
+                  ),
+                  const SizedBox(
+                    width: 10.0,
+                  ),
+                  Container(
+                    height: 48.0,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5.0),
+                        gradient: LinearGradient(
+                            colors: [Colors.indigo, Colors.indigo.shade300])),
+                    child: Material(
+                      borderRadius: BorderRadius.circular(5.0),
+                      color: Colors.transparent,
+                      child: InkWell(
+                        borderRadius: BorderRadius.circular(5.0),
+                        onTap: () {
+                          dataController.viewAllVisitsByDoctor();
+                        },
+                        child: const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 10.0),
+                          child: Row(
+                            children: [
+                              Text(
+                                'Tout',
+                                style: TextStyle(
+                                  fontSize: 10.0,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.white,
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  )
+                ],
               ),
             ),
-          )
-        ],
+            Expanded(
+              child: dataController.dataLoading.value ||
+                      dataController.allVisits.isEmpty
+                  ? const EmptyLoader()
+                  : ListView.separated(
+                      padding: const EdgeInsets.all(10.0),
+                      itemCount: dataController.allVisits.length,
+                      itemBuilder: (context, index) {
+                        var item = dataController.allVisits[index];
+                        return DoctorScheduleCard(item: item);
+                      },
+                      separatorBuilder: (__, _) => const SizedBox(height: 5.0),
+                    ),
+            )
+          ],
+        ),
       ),
     );
   }
@@ -81,6 +148,7 @@ class _DoctorSchedulePageState extends State<DoctorSchedulePage> {
                     ),
                     const Text(
                       "Mes visites",
+                      textScaleFactor: .9,
                       style: TextStyle(
                         fontSize: 22.0,
                         color: Colors.white,
@@ -226,20 +294,48 @@ class DoctorScheduleCard extends StatelessWidget {
                     ),
                   ),
                   PopupMenuButton(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    elevation: 4,
                     itemBuilder: (BuildContext context) {
                       return [
                         const PopupMenuItem(
                           value: 'detail',
-                          child: Text(
-                            'Voir détails',
-                            style: TextStyle(fontSize: 12.0),
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.arrow_circle_right,
+                                size: 15.0,
+                              ),
+                              SizedBox(
+                                width: 4.0,
+                              ),
+                              Text(
+                                'Voir détails',
+                                textScaleFactor: .8,
+                                style: TextStyle(fontSize: 12.0),
+                              ),
+                            ],
                           ),
                         ),
                         const PopupMenuItem(
                           value: 'delete',
-                          child: Text(
-                            'Supprimer',
-                            style: TextStyle(fontSize: 12.0),
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.delete,
+                                size: 15.0,
+                              ),
+                              SizedBox(
+                                width: 4.0,
+                              ),
+                              Text(
+                                'Supprimer',
+                                textScaleFactor: .8,
+                                style: TextStyle(fontSize: 12.0),
+                              ),
+                            ],
                           ),
                         ),
                       ];

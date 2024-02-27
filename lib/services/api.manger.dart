@@ -150,13 +150,38 @@ class ApiManager {
     }
   }
 
+  static Future addTreatments({Map<String, dynamic>? data}) async {
+    //Lance la requete d'enregistrement de l'infirmier
+    var res = await Api.request("/treatments.add", method: "post", body: {
+      "visit_id": data!["visit_id"],
+      "treatments": data["treatments"]
+    });
+    if (res.containsKey("errors")) {
+      EasyLoading.showInfo(res["errors"].toString());
+      return null;
+    }
+    if (res.containsKey("status")) {
+      nurseDataController.refreshSelectedVisitTreatments();
+      return res;
+    } else {
+      return null;
+    }
+  }
+
   //Permet au medecin de voir toutes ses visites
-  static Future<VisitModel> viewAllVisitsForDoctor() async {
+  static Future<VisitModel> viewAllVisitsForDoctor({int? nurseId}) async {
     var data = VisitModel();
     var user = authController.user.value;
-    var response = await Api.request("/doctor.visites/${user.id}");
-    if (response.containsKey("status")) {
-      data = VisitModel.fromJson(response);
+    var response = null;
+    if (nurseId != null) {
+      response = await Api.request("/doctor.visites/${user.id}/$nurseId");
+    } else {
+      response = await Api.request("/doctor.visites/${user.id}");
+    }
+    if (response != null) {
+      if (response.containsKey("status")) {
+        data = VisitModel.fromJson(response);
+      }
     }
     return data;
   }
@@ -170,6 +195,40 @@ class ApiManager {
       homeData = NurseHomeModel.fromJson(response);
     }
     return homeData;
+  }
+
+  static Future<List<Visit>> getNurseSchedule({String? date}) async {
+    var user = authController.user.value;
+    List<Visit> data = [];
+    String selectedDate = "";
+    if (date != null) {
+      selectedDate = date;
+    } else {
+      var now = DateTime.now();
+      selectedDate =
+          "${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}";
+    }
+    var response =
+        await Api.request("/nurse.schedules/${user.id}/$selectedDate");
+    if (response.containsKey("status")) {
+      data = <Visit>[];
+      response['schedules'].forEach((v) {
+        data.add(Visit.fromJson(v));
+      });
+    }
+    return data;
+  }
+
+  static Future<List<Treatment>> getTreatmentOfVisit({int? visitId}) async {
+    List<Treatment> data = [];
+    var response = await Api.request("/visit.treatments/$visitId");
+    if (response.containsKey("status")) {
+      data = <Treatment>[];
+      response['treatments'].forEach((v) {
+        data.add(Treatment.fromJson(v));
+      });
+    }
+    return data;
   }
 
   static Future completVisit({Map<String, dynamic>? data}) async {

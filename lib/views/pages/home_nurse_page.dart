@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:home_health/global/controllers.dart';
 import 'package:home_health/views/widgets/user_avatar.dart';
+import '../widgets/app_logo.dart';
+import '../widgets/empty_loader.dart';
 import '../widgets/heading_title.dart';
 import '../widgets/medic_doc_item.dart';
 import '../widgets/schedule_tile.dart';
@@ -42,7 +44,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       if (nurseDataController.delegates.isEmpty) ...[
                         SizedBox(
-                          height: 80,
+                          height: 120,
                           width: MediaQuery.of(context).size.width,
                           child: Card(
                             margin: const EdgeInsets.all(10.0),
@@ -52,12 +54,21 @@ class _HomeScreenState extends State<HomeScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
+                                  Image.asset(
+                                    "assets/imgs/empty.png",
+                                    height: 40.0,
+                                    fit: BoxFit.scaleDown,
+                                  ),
+                                  const SizedBox(
+                                    height: 4.0,
+                                  ),
                                   Text(
                                     "Aucune visite déléguée !",
+                                    textScaleFactor: .8,
                                     style: TextStyle(
                                       fontWeight: FontWeight.w400,
-                                      color: Colors.grey.shade500,
-                                      fontSize: 15.0,
+                                      color: Colors.grey.shade600,
+                                      fontSize: 12.0,
                                     ),
                                   )
                                 ],
@@ -96,18 +107,24 @@ class _HomeScreenState extends State<HomeScreen> {
                       const SizedBox(
                         height: 5.0,
                       ),
-                      ListView.builder(
-                        padding: const EdgeInsets.only(bottom: 20.0),
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemCount: nurseDataController.visits.length,
-                        itemBuilder: ((context, index) {
-                          var item = nurseDataController.visits[index];
-                          return MedicDocItemList(
-                            item: item,
-                          );
-                        }),
-                      )
+                      if (nurseDataController.visits.isNotEmpty) ...[
+                        ListView.builder(
+                          padding: const EdgeInsets.only(bottom: 20.0),
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: nurseDataController.visits.length,
+                          itemBuilder: ((context, index) {
+                            var item = nurseDataController.visits[index];
+                            return MedicDocItemList(
+                              item: item,
+                            );
+                          }),
+                        )
+                      ] else ...[
+                        const EmptyLoader(
+                          message: "Aucune visite à domicile disponible !",
+                        )
+                      ]
                     ],
                   ),
                 ),
@@ -140,55 +157,12 @@ class _HomeScreenState extends State<HomeScreen> {
             ],
           ),
         ),
-        child: SafeArea(
+        child: const SafeArea(
           child: Padding(
-            padding: const EdgeInsets.all(10.0),
+            padding: EdgeInsets.all(10.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  children: [
-                    /* Image.asset(
-                      "assets/imgs/logo-3.png",
-                      height: 25.0,
-                    ), */
-                    RichText(
-                      textAlign: TextAlign.center,
-                      text: TextSpan(
-                        style: TextStyle(
-                          fontSize: 30.0,
-                          fontFamily: 'Staatliches',
-                          color: Colors.white,
-                          fontWeight: FontWeight.w700,
-                          shadows: [
-                            Shadow(
-                              color: Colors.black.withOpacity(.2),
-                              blurRadius: .2,
-                              offset: const Offset(0, 3),
-                            )
-                          ],
-                        ),
-                        children: [
-                          TextSpan(
-                            text: "HOME".toUpperCase(),
-                            style: const TextStyle(
-                              fontWeight: FontWeight.w900,
-                            ),
-                          ),
-                          TextSpan(
-                            text: "HEALTH".toUpperCase(),
-                            style: const TextStyle(
-                              fontWeight: FontWeight.w900,
-                              color: Color.fromARGB(255, 234, 59, 74),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                const UserAvatar()
-              ],
+              children: [AppLogo(), UserAvatar()],
             ),
           ),
         ),

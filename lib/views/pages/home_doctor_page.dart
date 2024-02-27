@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:home_health/global/controllers.dart';
 import 'package:home_health/views/modals/doctor/create_patient.dart';
+import 'package:home_health/views/widgets/empty_loader.dart';
 
 import '../modals/doctor/create_nurse.dart';
+import '../widgets/app_logo.dart';
 import '../widgets/heading_title.dart';
 import '../widgets/menu_btn_action.dart';
 import '../widgets/nurse_card.dart';
@@ -131,40 +134,8 @@ class _HomeDoctorPageState extends State<HomeDoctorPage> {
                     ),
                     Obx(
                       () => dataController.nurses.isEmpty
-                          ? Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(vertical: 50.0),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  const Text(
-                                    "Aucun médecin repertorié vous !",
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      fontSize: 16.0,
-                                      fontWeight: FontWeight.w700,
-                                    ),
-                                  ),
-                                  const Text(
-                                    "Veuillez créer vos infirmier pour les visites à domicile de vos patients !",
-                                    textAlign: TextAlign.center,
-                                  ),
-                                  const SizedBox(
-                                    height: 15.0,
-                                  ),
-                                  ElevatedButton.icon(
-                                    onPressed: () {
-                                      showCreateNurseModal(context);
-                                    },
-                                    icon: const Icon(
-                                      Icons.add,
-                                      size: 17.0,
-                                    ),
-                                    label: const Text("Créer infirmier"),
-                                  )
-                                ],
-                              ),
+                          ? const EmptyLoader(
+                              message: "Aucun infirmier répertorié !",
                             )
                           : Card(
                               margin: EdgeInsets.zero,
@@ -215,55 +186,12 @@ class _HomeDoctorPageState extends State<HomeDoctorPage> {
             ],
           ),
         ),
-        child: SafeArea(
+        child: const SafeArea(
           child: Padding(
-            padding: const EdgeInsets.all(10.0),
+            padding: EdgeInsets.all(10.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  children: [
-                    /* Image.asset(
-                      "assets/imgs/logo-3.png",
-                      height: 25.0,
-                    ), */
-                    RichText(
-                      textAlign: TextAlign.center,
-                      text: TextSpan(
-                        style: TextStyle(
-                          fontSize: 30.0,
-                          fontFamily: 'Staatliches',
-                          color: Colors.white,
-                          fontWeight: FontWeight.w700,
-                          shadows: [
-                            Shadow(
-                              color: Colors.black.withOpacity(.2),
-                              blurRadius: .2,
-                              offset: const Offset(0, 3),
-                            )
-                          ],
-                        ),
-                        children: [
-                          TextSpan(
-                            text: "HOME".toUpperCase(),
-                            style: const TextStyle(
-                              fontWeight: FontWeight.w900,
-                            ),
-                          ),
-                          TextSpan(
-                            text: "HEALTH".toUpperCase(),
-                            style: const TextStyle(
-                              fontWeight: FontWeight.w900,
-                              color: Color.fromARGB(255, 234, 59, 74),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                const UserAvatar()
-              ],
+              children: [AppLogo(), UserAvatar()],
             ),
           ),
         ),

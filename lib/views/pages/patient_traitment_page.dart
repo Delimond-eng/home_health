@@ -3,22 +3,22 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
+import 'package:home_health/global/controllers.dart';
 import 'package:home_health/models/patient.dart';
 import 'package:home_health/services/api.manger.dart';
 import 'package:home_health/utils/costum_modal.dart';
 import 'package:home_health/views/widgets/custom_checkbox.dart';
 import 'package:home_health/views/widgets/submit_button_loader.dart';
 
-import '../../models/infirmier.dart';
+import '../../models/nurse.dart';
 import '../../models/schedule.dart';
 import '../widgets/heading_title.dart';
 import '../widgets/user_avatar.dart';
 
 class PatientTraitmentPage extends StatefulWidget {
-  final List<Treatment> soins;
   final Visit item;
-  const PatientTraitmentPage(
-      {super.key, required this.soins, required this.item});
+  const PatientTraitmentPage({super.key, required this.item});
 
   @override
   State<PatientTraitmentPage> createState() => _PatientTraitmentPageState();
@@ -30,6 +30,12 @@ class _PatientTraitmentPageState extends State<PatientTraitmentPage> {
   bool isLoading = false;
 
   @override
+  void dispose() {
+    super.dispose();
+    nurseDataController.viewHomeData();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey.shade200,
@@ -38,80 +44,85 @@ class _PatientTraitmentPageState extends State<PatientTraitmentPage> {
           _header(context),
           Expanded(
             child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  patientInfo(context),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 10.0,
-                      vertical: 2,
-                    ),
-                    child: HeadingTitle(
-                      title: "Soins & services prévus",
-                      actionChild: ElevatedButton.icon(
-                        onPressed: () {
-                          showAddServiceModal(context);
-                        },
-                        style: ElevatedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                          backgroundColor: Colors.blueAccent,
+              child: Obx(() => Column(
+                    children: [
+                      patientInfo(context),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10.0,
+                          vertical: 2,
                         ),
-                        label: const Text(
-                          "Ajouter",
-                          style: TextStyle(
-                            fontSize: 12.0,
-                            fontFamily: 'Poppins',
+                        child: HeadingTitle(
+                          title: "Soins & services prévus",
+                          actionChild: ElevatedButton.icon(
+                            onPressed: () {
+                              showAddServiceModal(context);
+                            },
+                            style: ElevatedButton.styleFrom(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 10.0),
+                              backgroundColor: Colors.blueAccent,
+                            ),
+                            label: const Text(
+                              "Ajouter",
+                              style: TextStyle(
+                                fontSize: 12.0,
+                                fontFamily: 'Poppins',
+                              ),
+                            ),
+                            icon: const Icon(
+                              CupertinoIcons.add,
+                              size: 14.0,
+                            ),
                           ),
                         ),
-                        icon: const Icon(
-                          CupertinoIcons.add,
-                          size: 14.0,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10.0,
+                          vertical: 5.0,
+                        ),
+                        child: Text(
+                          "Veuillez sélectionner les soins prodigués ou les services administrés à ce patient !",
+                          textScaleFactor: .8,
+                          style: TextStyle(
+                            fontFamily: 'Poppins',
+                            color: Colors.grey.shade800,
+                            fontSize: 14.0,
+                            fontWeight: FontWeight.w400,
+                          ),
                         ),
                       ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 10.0,
-                      vertical: 5.0,
-                    ),
-                    child: Text(
-                      "Veuillez sélectionner les soins prodigués ou les services administrés à ce patient !",
-                      textScaleFactor: .8,
-                      style: TextStyle(
-                        fontFamily: 'Poppins',
-                        color: Colors.grey.shade800,
-                        fontSize: 14.0,
-                        fontWeight: FontWeight.w400,
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 15.0, vertical: 10.0),
+                        child: CustomCheckbox(
+                          isChecked: isSelectedAll,
+                          title: "Sélectionnez tout",
+                          onChecked: () {
+                            setState(() {
+                              isSelectedAll = !isSelectedAll;
+                              if (isSelectedAll) {
+                                for (var e in nurseDataController
+                                    .selectScheduleTreatments) {
+                                  e.patientTreatmentStatus = "done";
+                                }
+                                selecteds.addAll(nurseDataController
+                                    .selectScheduleTreatments);
+                              } else {
+                                for (var e in nurseDataController
+                                    .selectScheduleTreatments) {
+                                  e.patientTreatmentStatus = "pending";
+                                }
+                                selecteds = [];
+                              }
+                            });
+                          },
+                        ),
                       ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: CustomCheckbox(
-                      isChecked: isSelectedAll,
-                      title: "Sélectionnez tout",
-                      onChecked: () {
-                        setState(() {
-                          isSelectedAll = !isSelectedAll;
-                          if (isSelectedAll) {
-                            for (var e in widget.soins) {
-                              e.patientTreatmentStatus = "done";
-                            }
-                            selecteds.addAll(widget.soins);
-                          } else {
-                            for (var e in widget.soins) {
-                              e.patientTreatmentStatus = "pending";
-                            }
-                            selecteds = [];
-                          }
-                        });
-                      },
-                    ),
-                  ),
-                  buildItems(context)
-                ],
-              ),
+                      buildItems(context)
+                    ],
+                  )),
             ),
           )
         ],
@@ -124,32 +135,44 @@ class _PatientTraitmentPageState extends State<PatientTraitmentPage> {
       padding: const EdgeInsets.all(8.0),
       child: Column(
         children: [
-          for (int i = 0; i < widget.soins.length; i++) ...[
+          for (int i = 0;
+              i < nurseDataController.selectScheduleTreatments.length;
+              i++) ...[
             TaskCard(
-              selected: widget.soins[i].patientTreatmentStatus == "done",
+              selected: nurseDataController
+                      .selectScheduleTreatments[i].patientTreatmentStatus ==
+                  "done",
               onSelected: () {
                 setState(() {
-                  widget.soins[i].patientTreatmentStatus =
-                      widget.soins[i].patientTreatmentStatus == "pending"
-                          ? "done"
-                          : "pending";
+                  nurseDataController.selectScheduleTreatments[i]
+                      .patientTreatmentStatus = nurseDataController
+                              .selectScheduleTreatments[i]
+                              .patientTreatmentStatus ==
+                          "pending"
+                      ? "done"
+                      : "pending";
                 });
-                if (widget.soins[i].patientTreatmentStatus == 'done') {
+                if (nurseDataController
+                        .selectScheduleTreatments[i].patientTreatmentStatus ==
+                    'done') {
                   setState(() {
-                    selecteds.add(widget.soins[i]);
+                    selecteds
+                        .add(nurseDataController.selectScheduleTreatments[i]);
                   });
                 } else {
                   setState(() {
                     int index = selecteds.indexWhere((e) => e
                         .patientTreatmentLibelle!
                         .toLowerCase()
-                        .contains(widget.soins[i].patientTreatmentLibelle!
+                        .contains(nurseDataController
+                            .selectScheduleTreatments[i]
+                            .patientTreatmentLibelle!
                             .toLowerCase()));
                     selecteds.removeAt(index);
                   });
                 }
               },
-              soin: widget.soins[i],
+              soin: nurseDataController.selectScheduleTreatments[i],
             ),
           ],
           if (selecteds.isNotEmpty)
@@ -210,11 +233,11 @@ class _PatientTraitmentPageState extends State<PatientTraitmentPage> {
               Row(
                 children: [
                   Container(
-                    height: 50.0,
-                    width: 50.0,
+                    height: 40.0,
+                    width: 40.0,
                     decoration: BoxDecoration(
                       color: Colors.indigo.shade200,
-                      borderRadius: BorderRadius.circular(5.0),
+                      borderRadius: BorderRadius.circular(40.0),
                     ),
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -241,11 +264,12 @@ class _PatientTraitmentPageState extends State<PatientTraitmentPage> {
                       children: [
                         Text(
                           widget.item.patient!.patientFullname!.toUpperCase(),
+                          textScaleFactor: .8,
                           style: const TextStyle(
                             color: Colors.white,
                             fontFamily: 'Poppins',
                             fontSize: 16,
-                            fontWeight: FontWeight.w600,
+                            fontWeight: FontWeight.w800,
                           ),
                         ),
                         Row(
@@ -301,19 +325,20 @@ class _PatientTraitmentPageState extends State<PatientTraitmentPage> {
                   },
                   style: OutlinedButton.styleFrom(
                     side: BorderSide(
-                      color: Colors.indigo.shade200,
+                      color: Colors.indigo.shade50,
                       width: 1.5,
                     ),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0),
+                      borderRadius: BorderRadius.circular(5.0),
                     ),
                   ),
                   child: Text(
                     "Déléguer la visite à un collègue".toUpperCase(),
+                    textScaleFactor: .8,
                     style: TextStyle(
-                      color: Colors.indigo.shade200,
+                      color: Colors.indigo.shade100,
                       fontSize: 12.0,
-                      fontWeight: FontWeight.w700,
+                      fontWeight: FontWeight.w600,
                       fontFamily: 'Poppins',
                       letterSpacing: 1,
                     ),
@@ -329,84 +354,83 @@ class _PatientTraitmentPageState extends State<PatientTraitmentPage> {
 
   void showAddServiceModal(BuildContext context) {
     final TextEditingController txtLibelle = TextEditingController();
+    bool isLoading = false;
     return showCustomModal(
       context,
       modalTitle: "Ajout des Soins supplémentaires",
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          children: [
-            TextField(
-              textAlign: TextAlign.left,
-              maxLines: null,
-              controller: txtLibelle,
-              decoration: InputDecoration(
-                hintText: 'Entrez votre texte ici...',
-                labelText: 'Soin ou service supplémentaire',
-                alignLabelWithHint: true,
-                floatingLabelBehavior: FloatingLabelBehavior.always,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(
-                    5,
+      child: StatefulBuilder(builder: (context, setter) {
+        return Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: [
+              TextField(
+                textAlign: TextAlign.left,
+                maxLines: null,
+                controller: txtLibelle,
+                decoration: InputDecoration(
+                  hintText: 'Entrez votre texte ici...',
+                  hintStyle: const TextStyle(
+                    fontSize: 10.0,
                   ),
-                ),
-                contentPadding: const EdgeInsets.all(
-                  16.0,
-                ),
-              ),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            Align(
-              alignment: Alignment.bottomRight,
-              child: ElevatedButton.icon(
-                icon: SvgPicture.asset(
-                  "assets/svg/check-double.svg",
-                  colorFilter: const ColorFilter.mode(
-                    Colors.white,
-                    BlendMode.srcIn,
+                  labelText: 'Soin ou service supplémentaire',
+                  alignLabelWithHint: true,
+                  floatingLabelBehavior: FloatingLabelBehavior.always,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(
+                      5,
+                    ),
                   ),
-                  height: 25.0,
-                ),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color.fromARGB(255, 9, 185, 83),
-                  alignment: Alignment.center,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 10.0,
-                    vertical: 8.0,
-                  ),
-                ),
-                onPressed: () {
-                  if (txtLibelle.text.isNotEmpty) {
-                    var soin =
-                        Treatment(patientTreatmentLibelle: txtLibelle.text);
-                    soin.patientTreatmentStatus = "done";
-                    setState(() {
-                      widget.soins.add(soin);
-                      txtLibelle.clear();
-                    });
-                  }
-                },
-                label: const Text(
-                  "Sauvegarder",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w400,
-                    fontSize: 14.0,
-                    fontFamily: 'Poppins',
+                  contentPadding: const EdgeInsets.all(
+                    16.0,
                   ),
                 ),
               ),
-            )
-          ],
-        ),
-      ),
+              const SizedBox(
+                height: 10,
+              ),
+              Align(
+                alignment: Alignment.bottomRight,
+                child: SizedBox(
+                  width: MediaQuery.of(context).size.width,
+                  child: SubmitBtnLoader(
+                    color: Colors.green,
+                    isLoading: isLoading,
+                    onPressed: () async {
+                      if (txtLibelle.text.isNotEmpty) {
+                        setter(() => isLoading = true);
+                        var form = {
+                          "visit_id": widget.item.id,
+                          "treatments": [
+                            {"libelle": txtLibelle.text}
+                          ]
+                        };
+                        ApiManager.addTreatments(data: form).then((res) async {
+                          setter(() => isLoading = false);
+                          if (res != null) {
+                            EasyLoading.showSuccess("");
+
+                            await nurseDataController
+                                .refreshSelectedVisitTreatments(
+                              visitId: widget.item.id,
+                            );
+                            Get.back();
+                          }
+                        });
+                      }
+                    },
+                    label: "Sauvegarder",
+                  ),
+                ),
+              )
+            ],
+          ),
+        );
+      }),
     );
   }
 
   Widget infirmiersBottomSheet(context) {
-    Infirmier? selectedInf;
+    Nurse? selectedInf;
     return StatefulBuilder(builder: (context, setter) {
       return SingleChildScrollView(
         padding: const EdgeInsets.all(10.0),
@@ -422,16 +446,17 @@ class _PatientTraitmentPageState extends State<PatientTraitmentPage> {
             const SizedBox(
               height: 8.0,
             ),
-            /* for (var infirmier in infirmiers) ...[
+            for (var infirmier in dataController.nurses) ...[
               NurseCard(
                 item: infirmier,
-                selected: infirmier.isSelected,
+                selected: infirmier.nurseStatus == "selected",
                 onSelected: () {
-                  for (var el in infirmiers) {
-                    el.isSelected = false;
+                  for (var el in dataController.nurses) {
+                    el.nurseStatus = "actif";
                   }
-                  infirmier.isSelected = !infirmier.isSelected;
-                  if (infirmier.isSelected) {
+                  infirmier.nurseStatus =
+                      infirmier.nurseStatus == "actif" ? "selected" : "actif";
+                  if (infirmier.nurseStatus == "selected") {
                     setter(() {
                       selectedInf = infirmier;
                     });
@@ -442,7 +467,7 @@ class _PatientTraitmentPageState extends State<PatientTraitmentPage> {
                   }
                 },
               ),
-            ], */
+            ],
             if (selectedInf != null) ...[
               const SizedBox(
                 height: 5.0,
@@ -541,6 +566,7 @@ class _PatientTraitmentPageState extends State<PatientTraitmentPage> {
                     ),
                     const Text(
                       "Traitement du patient",
+                      textScaleFactor: .9,
                       style: TextStyle(
                         fontWeight: FontWeight.w600,
                         fontFamily: 'Poppins',
@@ -562,7 +588,7 @@ class _PatientTraitmentPageState extends State<PatientTraitmentPage> {
 
 class NurseCard extends StatelessWidget {
   final bool selected;
-  final Infirmier item;
+  final Nurse item;
   final VoidCallback? onSelected;
   const NurseCard({
     super.key,
@@ -632,7 +658,7 @@ class NurseCard extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              item.nom!,
+                              item.nurseFullname!,
                               style: const TextStyle(
                                 fontSize: 16.0,
                                 fontWeight: FontWeight.w600,

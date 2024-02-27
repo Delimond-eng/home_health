@@ -219,6 +219,7 @@ class _StartingScreenState extends State<StartingScreen> {
                   ),
                   child: Text(
                     "Créer un compte médecin".toUpperCase(),
+                     textScaleFactor: .8,
                     style: const TextStyle(
                       color: Colors.blue,
                       fontWeight: FontWeight.w600,
@@ -462,6 +463,7 @@ class _StartingScreenState extends State<StartingScreen> {
                   ),
                   child: Text(
                     "Retour à la page de connexion".toUpperCase(),
+                    textScaleFactor: .8,
                     style: const TextStyle(
                       color: Colors.blue,
                       fontWeight: FontWeight.w600,

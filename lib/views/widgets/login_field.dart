@@ -59,7 +59,7 @@ class LoginField<T> extends StatelessWidget {
                           keyboardType: TextInputType.text,
                           style: const TextStyle(
                             fontFamily: 'Poppins',
-                            fontSize: 14.0,
+                            fontSize: 12.0,
                             color: Colors.black,
                             fontWeight: FontWeight.w500,
                           ),
@@ -70,7 +70,7 @@ class LoginField<T> extends StatelessWidget {
                             hintText: hintText,
                             hintStyle: const TextStyle(
                               color: Colors.grey,
-                              fontSize: 14.0,
+                              fontSize: 10.0,
                               fontWeight: FontWeight.w400,
                             ),
                             counterText: '',
@@ -96,6 +96,7 @@ class LoginField<T> extends StatelessWidget {
                             value: dropdownValue,
                             hint: Text(
                               hintText,
+                              textScaleFactor: .8,
                               style: const TextStyle(
                                 fontSize: 12.0,
                               ),
@@ -117,6 +118,7 @@ class LoginField<T> extends StatelessWidget {
                                 value: e,
                                 child: Text(
                                   e.toString(),
+                                  textScaleFactor: .8,
                                   style: const TextStyle(
                                     fontWeight: FontWeight.w500,
                                     fontSize: 14.0,
@@ -138,7 +140,7 @@ class LoginField<T> extends StatelessWidget {
                             keyboardType: TextInputType.text,
                             style: const TextStyle(
                               fontFamily: 'Poppins',
-                              fontSize: 14.0,
+                              fontSize: 12.0,
                               color: Colors.black,
                               fontWeight: FontWeight.w500,
                             ),
@@ -149,7 +151,7 @@ class LoginField<T> extends StatelessWidget {
                               hintText: hintText,
                               hintStyle: const TextStyle(
                                 color: Colors.grey,
-                                fontSize: 14.0,
+                                fontSize: 10.0,
                                 fontWeight: FontWeight.w400,
                               ),
                               counterText: '',

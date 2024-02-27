@@ -115,7 +115,10 @@ class _ScheduleCreatingState extends State<ScheduleCreating> {
                   Card(
                     margin: EdgeInsets.zero,
                     child: Padding(
-                      padding: const EdgeInsets.all(10.0),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 20.0,
+                      ),
                       child: Column(
                         children: [
                           for (int i = 0; i < fieldControllers.length; i++) ...[
@@ -263,6 +266,7 @@ class _ScheduleCreatingState extends State<ScheduleCreating> {
                     ),
                     const Text(
                       "Création agenda infirmier",
+                      textScaleFactor: .9,
                       style: TextStyle(
                         fontWeight: FontWeight.w600,
                         fontFamily: 'Poppins',
@@ -317,7 +321,7 @@ class InputSoin extends StatelessWidget {
       decoration: InputDecoration(
         hintText: 'Entrez le soin ou service à prodiguer...',
         labelText: 'Soin ou service',
-        hintStyle: const TextStyle(fontSize: 12.0, color: Colors.grey),
+        hintStyle: const TextStyle(fontSize: 10.0, color: Colors.grey),
         alignLabelWithHint: true,
         floatingLabelBehavior: FloatingLabelBehavior.always,
         border: OutlineInputBorder(
@@ -395,9 +399,15 @@ class DateHourPicker extends StatelessWidget {
                         ),
                         const SizedBox(width: 5.0),
                         if (date != null) ...[
-                          Text(date!)
+                          Text(
+                            date!,
+                            textScaleFactor: .8,
+                          )
                         ] else ...[
-                          const Text("Sélectionnez une date")
+                          const Text(
+                            "Sélectionnez une date",
+                            textScaleFactor: .8,
+                          )
                         ]
                       ],
                     ),
@@ -437,9 +447,15 @@ class DateHourPicker extends StatelessWidget {
                   ),
                   const SizedBox(width: 5.0),
                   if (hour != null) ...[
-                    Text(hour!),
+                    Text(
+                      hour!,
+                      textScaleFactor: .8,
+                    ),
                   ] else ...[
-                    const Text("--:--")
+                    const Text(
+                      "--:--",
+                      textScaleFactor: .8,
+                    )
                   ]
                 ],
               ),

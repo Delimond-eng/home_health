@@ -42,8 +42,7 @@ class MenuBtnAction extends StatelessWidget {
                 SvgPicture.asset(
                   "assets/svg/$icon",
                   height: 26.0,
-                  colorFilter: 
-                  ColorFilter.mode(color, BlendMode.srcIn),
+                  colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
                 ),
                 const SizedBox(
                   width: 10.0,
@@ -51,11 +50,12 @@ class MenuBtnAction extends StatelessWidget {
                 Flexible(
                   child: Text(
                     title,
+                    textScaleFactor: .8,
                     style: const TextStyle(
                       fontWeight: FontWeight.w400,
                       fontFamily: 'Poppins',
                       color: Colors.black,
-                      fontSize: 12.0,
+                      fontSize: 14.0,
                     ),
                   ),
                 )

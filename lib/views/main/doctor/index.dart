@@ -40,7 +40,7 @@ class _DoctorHomeState extends State<DoctorHome> {
         selectedLabelStyle: TextStyle(
           fontFamily: 'Poppins',
           color: Theme.of(context).primaryColor,
-          fontWeight: FontWeight.w600,
+          fontWeight: FontWeight.w500,
         ),
         unselectedLabelStyle: TextStyle(
           fontFamily: 'Poppins',
@@ -85,7 +85,7 @@ class _DoctorHomeState extends State<DoctorHome> {
                     const ColorFilter.mode(Colors.indigo, BlendMode.srcIn),
               ),
             ),
-            label: "Mes visites",
+            label: "Visites",
           ),
           BottomNavigationBarItem(
             icon: SvgPicture.asset("assets/svg/profile.svg"),

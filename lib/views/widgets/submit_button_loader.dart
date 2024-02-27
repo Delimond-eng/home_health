@@ -32,6 +32,7 @@ class SubmitBtnLoader extends StatelessWidget {
             )
           : Text(
               label.toUpperCase(),
+              textScaleFactor: .8,
               style: TextStyle(
                 color: color.shade50,
                 fontWeight: FontWeight.w600,

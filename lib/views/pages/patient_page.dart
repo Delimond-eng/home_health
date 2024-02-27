@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:home_health/global/controllers.dart';
+import 'package:home_health/views/widgets/empty_loader.dart';
 
 import '../../models/patient.dart';
 import '../widgets/user_avatar.dart';
@@ -23,19 +24,23 @@ class _PagePatientState extends State<PagePatient> {
         _header(context),
         Expanded(
           child: Obx(
-            () => ListView.separated(
-              padding: const EdgeInsets.all(10),
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: dataController.patients.length,
-              separatorBuilder: (__, _) => const SizedBox(height: 6.0),
-              itemBuilder: ((context, index) {
-                var item = dataController.patients[index];
-                return PatientItemList(
-                  item: item,
-                );
-              }),
-            ),
+            () => dataController.patients.isEmpty
+                ? const EmptyLoader(
+                    message: "Aucun patient répertorié !",
+                  )
+                : ListView.separated(
+                    padding: const EdgeInsets.all(10),
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: dataController.patients.length,
+                    separatorBuilder: (__, _) => const SizedBox(height: 6.0),
+                    itemBuilder: ((context, index) {
+                      var item = dataController.patients[index];
+                      return PatientItemList(
+                        item: item,
+                      );
+                    }),
+                  ),
           ),
         )
       ],
@@ -84,6 +89,7 @@ class _PagePatientState extends State<PagePatient> {
                     ),
                     const Text(
                       "Mes Patients",
+                      textScaleFactor: .9,
                       style: TextStyle(
                         fontSize: 22.0,
                         color: Colors.white,
@@ -111,7 +117,11 @@ class PatientItemList extends StatelessWidget {
     return Card(
       margin: EdgeInsets.zero,
       child: ListTile(
-        title: Text(item.patientFullname!),
+        title: Text(
+          item.patientFullname!,
+          textScaleFactor: .8,
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        ),
         subtitle: Row(
           children: [
             SvgPicture.asset(
@@ -123,6 +133,7 @@ class PatientItemList extends StatelessWidget {
             Flexible(
               child: Text(
                 item.patientAddress!,
+                textScaleFactor: .8,
                 style: const TextStyle(
                   fontSize: 12.0,
                 ),
