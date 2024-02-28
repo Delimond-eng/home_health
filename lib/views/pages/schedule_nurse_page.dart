@@ -228,7 +228,7 @@ class ScheduleCard extends StatelessWidget {
                         children: [
                           Flexible(
                             child: Text(
-                              item.nurse!.nurseFullname!,
+                              item.patient!.patientFullname!,
                               textScaleFactor: .8,
                               style: const TextStyle(
                                 color: Colors.black,

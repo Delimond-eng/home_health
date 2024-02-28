@@ -316,11 +316,10 @@ class _PatientTraitmentPageState extends State<PatientTraitmentPage> {
                           ),
                         ),
                         builder: (context) {
-                          /* for (var i in infirmiers) {
-                            i.isSelected = false;
+                          for (var e in nurseDataController.nurses) {
+                            e.nurseStatus = "actif";
                           }
-                          return infirmiersBottomSheet(context); */
-                          return Container();
+                          return infirmiersBottomSheet(context);
                         });
                   },
                   style: OutlinedButton.styleFrom(
@@ -431,83 +430,97 @@ class _PatientTraitmentPageState extends State<PatientTraitmentPage> {
 
   Widget infirmiersBottomSheet(context) {
     Nurse? selectedInf;
-    return StatefulBuilder(builder: (context, setter) {
-      return SingleChildScrollView(
-        padding: const EdgeInsets.all(10.0),
-        child: Column(
-          children: [
-            const Text(
-              'Veuillez sélectionner votre collègue infirmier auquel vous voulez déléguer cette visite !',
-              textScaleFactor: .9,
-              style: TextStyle(
-                fontSize: 14.0,
-              ),
-            ),
-            const SizedBox(
-              height: 8.0,
-            ),
-            for (var infirmier in dataController.nurses) ...[
-              NurseCard(
-                item: infirmier,
-                selected: infirmier.nurseStatus == "selected",
-                onSelected: () {
-                  for (var el in dataController.nurses) {
-                    el.nurseStatus = "actif";
-                  }
-                  infirmier.nurseStatus =
-                      infirmier.nurseStatus == "actif" ? "selected" : "actif";
-                  if (infirmier.nurseStatus == "selected") {
-                    setter(() {
-                      selectedInf = infirmier;
-                    });
-                  } else {
-                    setter(() {
-                      selectedInf = null;
-                    });
-                  }
-                },
-              ),
-            ],
-            if (selectedInf != null) ...[
-              const SizedBox(
-                height: 5.0,
-              ),
-              ZoomIn(
-                child: SizedBox(
-                  height: 50.0,
-                  width: MediaQuery.of(context).size.width,
-                  child: ElevatedButton.icon(
-                    icon: SvgPicture.asset(
-                      "assets/svg/check-double.svg",
-                      colorFilter:
-                          const ColorFilter.mode(Colors.white, BlendMode.srcIn),
-                      height: 25.0,
-                    ),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color.fromARGB(255, 11, 179, 89),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                    ),
-                    onPressed: () {},
-                    label: const Text(
-                      "Valider la visite",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 14.0,
-                        fontFamily: 'Poppins',
-                        letterSpacing: 1,
-                      ),
-                    ),
+    bool isLoading = false;
+    return DraggableScrollableSheet(
+      initialChildSize: 0.5, // Hauteur initiale de la feuille
+      minChildSize: 0.2, // Hauteur minimale de la feuille
+      maxChildSize: 0.9, // Hauteur maximale de la feuille
+      expand: false,
+      builder: (BuildContext context, ScrollController scrollController) {
+        return StatefulBuilder(builder: (context, setter) {
+          return SingleChildScrollView(
+            padding: const EdgeInsets.all(10.0),
+            controller: scrollController,
+            child: Column(
+              children: [
+                const Text(
+                  'Veuillez sélectionner votre collègue infirmier auquel vous voulez déléguer cette visite !',
+                  textScaleFactor: .9,
+                  style: TextStyle(
+                    fontSize: 14.0,
                   ),
                 ),
-              )
-            ]
-          ],
-        ),
-      );
-    });
+                const SizedBox(
+                  height: 8.0,
+                ),
+                for (var nurse in nurseDataController.nurses) ...[
+                  NurseCard(
+                    item: nurse,
+                    selected: nurse.nurseStatus == "selected",
+                    onSelected: () {
+                      for (var el in dataController.nurses) {
+                        el.nurseStatus = "actif";
+                      }
+                      nurse.nurseStatus =
+                          nurse.nurseStatus == "actif" ? "selected" : "actif";
+                      if (nurse.nurseStatus == "selected") {
+                        setter(() {
+                          selectedInf = nurse;
+                        });
+                      } else {
+                        setter(() {
+                          selectedInf = null;
+                        });
+                      }
+                    },
+                  ),
+                ],
+                if (selectedInf != null) ...[
+                  const SizedBox(
+                    height: 5.0,
+                  ),
+                  ZoomIn(
+                    child: SizedBox(
+                      height: 50.0,
+                      width: MediaQuery.of(context).size.width,
+                      child: SubmitBtnLoader(
+                        icon: SvgPicture.asset(
+                          "assets/svg/check-double.svg",
+                          colorFilter: const ColorFilter.mode(
+                            Colors.white,
+                            BlendMode.srcIn,
+                          ),
+                          height: 22.0,
+                        ),
+                        color: Colors.green,
+                        isLoading: isLoading,
+                        onPressed: () async {
+                          setter(() => isLoading = true);
+                          int visitId = widget.item.id!;
+                          ApiManager.delegateVisit(data: {
+                            "visit_id": visitId,
+                            "nurse_id": selectedInf!.id
+                          }).then((res) {
+                            setter(() => isLoading = false);
+                            EasyLoading.showSuccess(
+                                "Visite déléguée avec success");
+                            Future.delayed(const Duration(seconds: 2), () {
+                              Get.back();
+                              Navigator.pop(context);
+                            });
+                          });
+                        },
+                        label: "Valider la visite",
+                      ),
+                    ),
+                  )
+                ]
+              ],
+            ),
+          );
+        });
+      },
+    );
   }
 
   Widget _header(BuildContext context) {
@@ -659,9 +672,10 @@ class NurseCard extends StatelessWidget {
                           children: [
                             Text(
                               item.nurseFullname!,
+                              textScaleFactor: .8,
                               style: const TextStyle(
                                 fontSize: 16.0,
-                                fontWeight: FontWeight.w600,
+                                fontWeight: FontWeight.w700,
                               ),
                             ),
                             const Text(

@@ -4,6 +4,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 class SubmitBtnLoader extends StatelessWidget {
   final bool isLoading;
   final String label;
+  final Widget? icon;
   final MaterialColor color;
   final VoidCallback onPressed;
   const SubmitBtnLoader({
@@ -12,6 +13,7 @@ class SubmitBtnLoader extends StatelessWidget {
     required this.label,
     required this.color,
     required this.onPressed,
+    this.icon,
   });
 
   @override
@@ -30,15 +32,25 @@ class SubmitBtnLoader extends StatelessWidget {
               color: Colors.white,
               size: 30.0,
             )
-          : Text(
-              label.toUpperCase(),
-              textScaleFactor: .8,
-              style: TextStyle(
-                color: color.shade50,
-                fontWeight: FontWeight.w600,
-                fontFamily: 'Poppins',
-                letterSpacing: 1,
-              ),
+          : Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                if (icon != null) icon!,
+                const SizedBox(
+                  width: 5,
+                ),
+                Text(
+                  label.toUpperCase(),
+                  textScaleFactor: .8,
+                  style: TextStyle(
+                    color: color.shade50,
+                    fontWeight: FontWeight.w600,
+                    fontFamily: 'Poppins',
+                    letterSpacing: 1,
+                  ),
+                ),
+              ],
             ),
     );
   }

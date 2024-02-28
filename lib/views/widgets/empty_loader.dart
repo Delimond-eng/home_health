@@ -23,7 +23,7 @@ class EmptyLoader extends StatelessWidget {
                 ] else ...[
                   Image.asset(
                     "assets/imgs/empty.png",
-                    height: 60.0,
+                    height: 80.0,
                     fit: BoxFit.scaleDown,
                   ),
                   const SizedBox(
@@ -33,7 +33,7 @@ class EmptyLoader extends StatelessWidget {
                     message ?? "Aucune donnée répertoriée !",
                     textScaleFactor: .8,
                     style: const TextStyle(
-                      fontSize: 12.0,
+                      fontSize: 14.0,
                       fontWeight: FontWeight.w500,
                     ),
                   )

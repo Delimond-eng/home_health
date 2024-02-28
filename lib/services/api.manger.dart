@@ -83,7 +83,12 @@ class ApiManager {
   static Future<NurseModel> viewAllNurseForDoctor() async {
     var data = NurseModel();
     var user = authController.user.value;
-    var response = await Api.request("/nurses.all/${user.id}");
+    var response = null;
+    if (user.doctorId == null) {
+      response = await Api.request("/nurses.all/${user.id}");
+    } else {
+      response = await Api.request("/nurses.all/${user.doctorId}/${user.id}");
+    }
     if (response.containsKey("status")) {
       data = NurseModel.fromJson(response);
     }
@@ -240,6 +245,25 @@ class ApiManager {
       "visit_id": data!["visit_id"],
       "treatments": data["treatments"],
       "nurse_id": user.id
+    });
+    if (res.containsKey("errors")) {
+      EasyLoading.showInfo(res["errors"].toString());
+      return null;
+    }
+    if (res.containsKey("status")) {
+      nurseDataController.viewHomeData();
+      return res;
+    } else {
+      return null;
+    }
+  }
+
+  //Deleguer une visite à un autre collègue infirmier
+  static Future delegateVisit({Map<String, dynamic>? data}) async {
+    //Lance la requete d'enregistrement de l'infirmier
+    var res = await Api.request("/visit.delegate", method: "post", body: {
+      "visit_id": data!['visit_id'],
+      "nurse_id": data['nurse_id'],
     });
     if (res.containsKey("errors")) {
       EasyLoading.showInfo(res["errors"].toString());

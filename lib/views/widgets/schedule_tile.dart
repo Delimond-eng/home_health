@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import '../../global/controllers.dart';
 import '../../models/nurse_home.dart';
+import '../pages/patient_traitment_page.dart';
 
 class ScheduleTileDelegate extends StatelessWidget {
   final Delegate item;
+  final double? width;
   const ScheduleTileDelegate(
-      {super.key, required this.isLast, required this.item});
+      {super.key, required this.isLast, required this.item, this.width});
   final bool isLast;
 
   @override
@@ -15,153 +18,173 @@ class ScheduleTileDelegate extends StatelessWidget {
       children: [
         SizedBox(
           height: 125.0,
-          width: MediaQuery.of(context).size.width * .85,
+          width: width ?? MediaQuery.of(context).size.width * .85,
           child: Card(
             margin: const EdgeInsets.only(right: 8.0),
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Flexible(
-                        child: Text(
-                          item.visit!.patient!.patientFullname!,
-                          style: const TextStyle(
-                            color: Colors.black,
-                            fontFamily: 'Poppins',
-                            fontSize: 18,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
+            child: Material(
+              borderRadius: BorderRadius.circular(4.0),
+              color: Colors.transparent,
+              child: InkWell(
+                borderRadius: BorderRadius.circular(4.0),
+                onTap: () {
+                  nurseDataController.selectScheduleTreatments.value =
+                      item.visit!.treatments!;
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => PatientTraitmentPage(
+                        item: item.visit!,
                       ),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 8.0,
-                  ),
-                  Column(
+                    ),
+                  );
+                },
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
                     children: [
                       Row(
                         children: [
-                          SvgPicture.asset(
-                            "assets/svg/location-place.svg",
-                            colorFilter: const ColorFilter.mode(
-                              Colors.blue,
-                              BlendMode.srcIn,
-                            ),
-                            height: 20,
-                          ),
-                          const SizedBox(
-                            width: 5.0,
-                          ),
                           Flexible(
                             child: Text(
-                              item.visit!.patient!.patientAddress!,
+                              item.visit!.patient!.patientFullname!,
                               textScaleFactor: .8,
                               style: const TextStyle(
-                                fontSize: 15.0,
                                 color: Colors.black,
-                                fontWeight: FontWeight.w400,
+                                fontFamily: 'Poppins',
+                                fontSize: 18,
+                                fontWeight: FontWeight.w600,
                               ),
                             ),
-                          )
+                          ),
                         ],
                       ),
                       const SizedBox(
-                        height: 5.0,
+                        height: 8.0,
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
                         children: [
-                          Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(4),
-                              color: Colors.black87,
-                              border:
-                                  Border.all(color: Colors.white, width: 1.5),
-                            ),
-                            child: Material(
-                              borderRadius: BorderRadius.circular(4),
-                              color: Colors.transparent,
-                              child: InkWell(
-                                onTap: () {},
-                                borderRadius: BorderRadius.circular(4),
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                    vertical: 4.0,
-                                    horizontal: 8.0,
+                          Row(
+                            children: [
+                              SvgPicture.asset(
+                                "assets/svg/location-place.svg",
+                                colorFilter: const ColorFilter.mode(
+                                  Colors.blue,
+                                  BlendMode.srcIn,
+                                ),
+                                height: 20,
+                              ),
+                              const SizedBox(
+                                width: 5.0,
+                              ),
+                              Flexible(
+                                child: Text(
+                                  item.visit!.patient!.patientAddress!,
+                                  textScaleFactor: .8,
+                                  style: const TextStyle(
+                                    fontSize: 15.0,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w400,
                                   ),
+                                ),
+                              )
+                            ],
+                          ),
+                          const SizedBox(
+                            height: 5.0,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(4),
+                                  color: Colors.black87,
+                                  border: Border.all(
+                                      color: Colors.white, width: 1.5),
+                                ),
+                                child: Material(
+                                  borderRadius: BorderRadius.circular(4),
+                                  color: Colors.transparent,
+                                  child: InkWell(
+                                    onTap: () {},
+                                    borderRadius: BorderRadius.circular(4),
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                        vertical: 4.0,
+                                        horizontal: 8.0,
+                                      ),
+                                      child: Row(
+                                        children: [
+                                          SvgPicture.asset(
+                                            "assets/svg/map-location.svg",
+                                            colorFilter: ColorFilter.mode(
+                                              Colors.brown.shade100,
+                                              BlendMode.srcIn,
+                                            ),
+                                            height: 15.0,
+                                          ),
+                                          const SizedBox(
+                                            width: 8.0,
+                                          ),
+                                          Text(
+                                            'Itinéraire',
+                                            style: TextStyle(
+                                              fontSize: 12.0,
+                                              fontWeight: FontWeight.w500,
+                                              color: Colors.brown.shade100,
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.white.withOpacity(.8),
+                                  borderRadius: BorderRadius.circular(5),
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(5.0),
                                   child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
                                     children: [
-                                      SvgPicture.asset(
-                                        "assets/svg/map-location.svg",
-                                        colorFilter: ColorFilter.mode(
-                                          Colors.brown.shade100,
-                                          BlendMode.srcIn,
-                                        ),
-                                        height: 15.0,
+                                      Row(
+                                        children: [
+                                          const Icon(
+                                            Icons.calendar_month_outlined,
+                                            size: 15.0,
+                                          ),
+                                          const SizedBox(
+                                            width: 5.0,
+                                          ),
+                                          Text(
+                                            item.visit!.visitDate!,
+                                            style: const TextStyle(
+                                              color: Colors.black,
+                                              fontFamily: 'Poppins',
+                                              fontSize: 10,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          )
+                                        ],
                                       ),
-                                      const SizedBox(
-                                        width: 8.0,
-                                      ),
-                                      Text(
-                                        'Itinéraire',
-                                        style: TextStyle(
-                                          fontSize: 12.0,
-                                          fontWeight: FontWeight.w500,
-                                          color: Colors.brown.shade100,
-                                        ),
-                                      )
                                     ],
                                   ),
                                 ),
                               ),
-                            ),
-                          ),
-                          Container(
-                            decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(.8),
-                              borderRadius: BorderRadius.circular(5),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(5.0),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  Row(
-                                    children: [
-                                      const Icon(
-                                        Icons.calendar_month_outlined,
-                                        size: 15.0,
-                                      ),
-                                      const SizedBox(
-                                        width: 5.0,
-                                      ),
-                                      Text(
-                                        item.visit!.visitDate!,
-                                        style: const TextStyle(
-                                          color: Colors.black,
-                                          fontFamily: 'Poppins',
-                                          fontSize: 10,
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
+                            ],
+                          )
                         ],
                       )
                     ],
-                  )
-                ],
+                  ),
+                ),
               ),
             ),
           ),

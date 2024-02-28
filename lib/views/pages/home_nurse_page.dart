@@ -89,6 +89,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ScheduleTileDelegate(
                                   isLast: i ==
                                       nurseDataController.delegates.length - 1,
+                                  width:
+                                      nurseDataController.delegates.length == 1
+                                          ? MediaQuery.of(context).size.width
+                                          : null,
                                   item: nurseDataController.delegates[i],
                                 ),
                               ],

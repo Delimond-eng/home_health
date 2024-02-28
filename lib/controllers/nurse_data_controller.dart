@@ -3,6 +3,7 @@ import 'package:home_health/global/controllers.dart';
 import 'package:home_health/services/api.manger.dart';
 
 import '../global/storage.dart';
+import '../models/nurse.dart';
 import '../models/nurse_home.dart';
 import '../models/patient.dart';
 import '../models/schedule.dart';
@@ -12,6 +13,7 @@ class NurseDataController extends GetxController {
 
   RxList<Delegate> delegates = RxList.empty();
   RxList<Visit> visits = RxList.empty();
+  RxList<Nurse> nurses = RxList.empty();
   var selectScheduleTreatments = <Treatment>[].obs;
 
   @override
@@ -32,6 +34,10 @@ class NurseDataController extends GetxController {
           delegates.addAll(data.response!.delegates!);
           visits.addAll(data.response!.visits!);
         }
+
+        /***/
+        var nurseModel = await ApiManager.viewAllNurseForDoctor();
+        nurses.addAll(nurseModel.nurses!);
       }
       return true;
     }
