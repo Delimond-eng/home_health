@@ -4,6 +4,7 @@ import 'package:home_health/services/api.manger.dart';
 import '../global/storage.dart';
 import '../models/nurse.dart';
 import '../models/patient.dart';
+import '../models/report.dart';
 import '../models/schedule.dart';
 
 class DataController extends GetxController {
@@ -12,6 +13,7 @@ class DataController extends GetxController {
   var nurses = <Nurse>[].obs;
   var patients = <Patient>[].obs;
   var allVisits = <Visit>[].obs;
+  var reports = <Report>[].obs;
   RxBool dataLoading = RxBool(false);
 
   @override
@@ -41,6 +43,13 @@ class DataController extends GetxController {
           allVisits.clear();
           allVisits.addAll(modelVisit.visits!);
         }
+
+        /***/
+        var reportModel = await ApiManager.viewReportByDoctor();
+        if (reportModel.status != null) {
+          reports.clear();
+          reports.addAll(reportModel.reports!);
+        }
         dataLoading.value = false;
       }
     }
@@ -55,5 +64,13 @@ class DataController extends GetxController {
       allVisits.clear();
       allVisits.addAll(modelVisit.visits!);
     }
+  }
+
+  Future<void> refreshReport({String? key}) async {
+    reports.clear();
+    dataLoading.value = true;
+    var reportModel = await ApiManager.viewReportByDoctor(key: key!);
+    dataLoading.value = false;
+    reports.addAll(reportModel.reports!);
   }
 }

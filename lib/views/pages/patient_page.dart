@@ -166,16 +166,40 @@ class PatientItemList extends StatelessWidget {
             return [
               const PopupMenuItem(
                 value: 'detail',
-                child: Text(
-                  'Voir détails',
-                  style: TextStyle(fontSize: 12.0),
+                child: Row(
+                  children: [
+                    Icon(
+                      CupertinoIcons.arrow_down_right_square,
+                      size: 15.0,
+                    ),
+                    SizedBox(
+                      width: 4.0,
+                    ),
+                    Text(
+                      'Voir les détails',
+                      textScaleFactor: .8,
+                      style: TextStyle(fontSize: 14.0),
+                    ),
+                  ],
                 ),
               ),
               const PopupMenuItem(
                 value: 'delete',
-                child: Text(
-                  'Supprimer',
-                  style: TextStyle(fontSize: 12.0),
+                child: Row(
+                  children: [
+                    Icon(
+                      CupertinoIcons.delete,
+                      size: 15.0,
+                    ),
+                    SizedBox(
+                      width: 4.0,
+                    ),
+                    Text(
+                      'Supprimer',
+                      textScaleFactor: .8,
+                      style: TextStyle(fontSize: 14.0),
+                    ),
+                  ],
                 ),
               ),
             ];

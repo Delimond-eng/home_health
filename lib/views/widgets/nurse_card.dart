@@ -1,5 +1,12 @@
+// ignore_for_file: use_build_context_synchronously
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:home_health/global/controllers.dart';
+import 'package:home_health/services/api.manger.dart';
+import 'package:home_health/views/pages/doctor_report_page.dart';
 
 import '../../models/nurse.dart';
 
@@ -55,20 +62,48 @@ class NurseCard extends StatelessWidget {
           ),
         ),
         trailing: PopupMenuButton(
+          elevation: 3.0,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(5.0),
+          ),
           itemBuilder: (BuildContext context) {
             return [
               const PopupMenuItem(
                 value: 'detail',
-                child: Text(
-                  'Voir les rapports',
-                  style: TextStyle(fontSize: 12.0),
+                child: Row(
+                  children: [
+                    Icon(
+                      CupertinoIcons.chart_bar_circle,
+                      size: 15.0,
+                    ),
+                    SizedBox(
+                      width: 4.0,
+                    ),
+                    Text(
+                      'Voir les rapports',
+                      textScaleFactor: .8,
+                      style: TextStyle(fontSize: 14.0),
+                    ),
+                  ],
                 ),
               ),
               const PopupMenuItem(
                 value: 'delete',
-                child: Text(
-                  'Supprimer',
-                  style: TextStyle(fontSize: 12.0),
+                child: Row(
+                  children: [
+                    Icon(
+                      CupertinoIcons.trash,
+                      size: 15.0,
+                    ),
+                    SizedBox(
+                      width: 4.0,
+                    ),
+                    Text(
+                      'Supprimer',
+                      textScaleFactor: .8,
+                      style: TextStyle(fontSize: 14.0),
+                    ),
+                  ],
                 ),
               ),
             ];
@@ -81,9 +116,27 @@ class NurseCard extends StatelessWidget {
             padding: const EdgeInsets.all(2),
             child: const Icon(Icons.more_horiz),
           ),
-          onSelected: (value) {
+          onSelected: (action) async {
             // Handle menu item selection
-            print('Selected: $value');
+            switch (action) {
+              case "detail":
+                EasyLoading.show(
+                  status: 'Chargement...',
+                  maskType: EasyLoadingMaskType.black,
+                );
+                var model =
+                    await ApiManager.viewReportByNurse(nurseId: item.id);
+                EasyLoading.dismiss();
+                dataController.reports.value = model.reports!;
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => DoctorReportPage(nurse: item),
+                  ),
+                );
+                break;
+              default:
+            }
           },
         ),
       ),

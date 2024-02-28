@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:home_health/global/controllers.dart';
+import 'package:home_health/views/pages/nurse_report_page.dart';
 import 'package:home_health/views/pages/schedule_nurse_page.dart';
 import '../../pages/home_nurse_page.dart';
 import 'package:animate_do/animate_do.dart';
@@ -17,9 +18,7 @@ class _NurseHomeState extends State<NurseHome> {
   final List<Widget> _pages = [
     const HomeScreen(),
     const ScheduleNursePage(),
-    const Center(
-      child: Text("Reports"),
-    ),
+    const NurseReportPage(),
     const Center(
       child: Text("Profil"),
     ),

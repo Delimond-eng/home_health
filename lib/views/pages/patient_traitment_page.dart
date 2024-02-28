@@ -30,9 +30,19 @@ class _PatientTraitmentPageState extends State<PatientTraitmentPage> {
   bool isLoading = false;
 
   @override
-  void dispose() {
-    super.dispose();
-    nurseDataController.viewHomeData();
+  void initState() {
+    super.initState();
+    initWhenIsDone();
+  }
+
+  initWhenIsDone() {
+    setState(() {
+      for (var e in nurseDataController.selectScheduleTreatments) {
+        if (e.patientTreatmentStatus == 'done') {
+          selecteds.add(e);
+        }
+      }
+    });
   }
 
   @override
@@ -303,47 +313,48 @@ class _PatientTraitmentPageState extends State<PatientTraitmentPage> {
                   )
                 ],
               ),
-              SizedBox(
-                height: 40.0,
-                width: MediaQuery.of(context).size.width,
-                child: OutlinedButton(
-                  onPressed: () {
-                    showModalBottomSheet(
-                        context: context,
-                        shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.vertical(
-                            top: Radius.circular(20.0),
+              if (widget.item.visitStatus != 'completed')
+                SizedBox(
+                  height: 40.0,
+                  width: MediaQuery.of(context).size.width,
+                  child: OutlinedButton(
+                    onPressed: () {
+                      showModalBottomSheet(
+                          context: context,
+                          shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.vertical(
+                              top: Radius.circular(20.0),
+                            ),
                           ),
-                        ),
-                        builder: (context) {
-                          for (var e in nurseDataController.nurses) {
-                            e.nurseStatus = "actif";
-                          }
-                          return infirmiersBottomSheet(context);
-                        });
-                  },
-                  style: OutlinedButton.styleFrom(
-                    side: BorderSide(
-                      color: Colors.indigo.shade50,
-                      width: 1.5,
+                          builder: (context) {
+                            for (var e in nurseDataController.nurses) {
+                              e.nurseStatus = "actif";
+                            }
+                            return infirmiersBottomSheet(context);
+                          });
+                    },
+                    style: OutlinedButton.styleFrom(
+                      side: BorderSide(
+                        color: Colors.indigo.shade50,
+                        width: 1.5,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5.0),
+                      ),
                     ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5.0),
-                    ),
-                  ),
-                  child: Text(
-                    "Déléguer la visite à un collègue".toUpperCase(),
-                    textScaleFactor: .8,
-                    style: TextStyle(
-                      color: Colors.indigo.shade100,
-                      fontSize: 12.0,
-                      fontWeight: FontWeight.w600,
-                      fontFamily: 'Poppins',
-                      letterSpacing: 1,
+                    child: Text(
+                      "Déléguer la visite à un collègue".toUpperCase(),
+                      textScaleFactor: .8,
+                      style: TextStyle(
+                        color: Colors.indigo.shade100,
+                        fontSize: 12.0,
+                        fontWeight: FontWeight.w600,
+                        fontFamily: 'Poppins',
+                        letterSpacing: 1,
+                      ),
                     ),
                   ),
                 ),
-              ),
             ],
           ),
         ),

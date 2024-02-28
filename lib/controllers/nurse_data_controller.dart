@@ -6,6 +6,7 @@ import '../global/storage.dart';
 import '../models/nurse.dart';
 import '../models/nurse_home.dart';
 import '../models/patient.dart';
+import '../models/report.dart';
 import '../models/schedule.dart';
 
 class NurseDataController extends GetxController {
@@ -14,6 +15,7 @@ class NurseDataController extends GetxController {
   RxList<Delegate> delegates = RxList.empty();
   RxList<Visit> visits = RxList.empty();
   RxList<Nurse> nurses = RxList.empty();
+  RxList<Report> reports = RxList.empty();
   var selectScheduleTreatments = <Treatment>[].obs;
 
   @override
@@ -36,8 +38,15 @@ class NurseDataController extends GetxController {
         }
 
         /***/
+
         var nurseModel = await ApiManager.viewAllNurseForDoctor();
+        nurses.clear();
         nurses.addAll(nurseModel.nurses!);
+
+        /***/
+        var reportModel = await ApiManager.viewReportByNurse();
+        reports.clear();
+        reports.addAll(reportModel.reports!);
       }
       return true;
     }
@@ -48,11 +57,20 @@ class NurseDataController extends GetxController {
     dataController.dataLoading.value = true;
     var schedules = await ApiManager.getNurseSchedule(date: date);
     dataController.dataLoading.value = false;
+    visits.clear();
     visits.addAll(schedules);
   }
 
   Future<void> refreshSelectedVisitTreatments({int? visitId}) async {
     var treatments = await ApiManager.getTreatmentOfVisit(visitId: visitId);
     selectScheduleTreatments.value = treatments;
+  }
+
+  Future<void> refreshReport({String? key}) async {
+    reports.clear();
+    dataController.dataLoading.value = true;
+    var reportModel = await ApiManager.viewReportByNurse(key: key!);
+    dataController.dataLoading.value = false;
+    reports.addAll(reportModel.reports!);
   }
 }

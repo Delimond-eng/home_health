@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
@@ -295,7 +296,7 @@ class DoctorScheduleCard extends StatelessWidget {
                   ),
                   PopupMenuButton(
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8.0),
+                      borderRadius: BorderRadius.circular(5.0),
                     ),
                     elevation: 4,
                     itemBuilder: (BuildContext context) {
@@ -305,16 +306,16 @@ class DoctorScheduleCard extends StatelessWidget {
                           child: Row(
                             children: [
                               Icon(
-                                Icons.arrow_circle_right,
+                                CupertinoIcons.arrow_down_right_square,
                                 size: 15.0,
                               ),
                               SizedBox(
                                 width: 4.0,
                               ),
                               Text(
-                                'Voir détails',
+                                'Voir les détails',
                                 textScaleFactor: .8,
-                                style: TextStyle(fontSize: 12.0),
+                                style: TextStyle(fontSize: 14.0),
                               ),
                             ],
                           ),
@@ -324,7 +325,7 @@ class DoctorScheduleCard extends StatelessWidget {
                           child: Row(
                             children: [
                               Icon(
-                                Icons.delete,
+                                CupertinoIcons.delete,
                                 size: 15.0,
                               ),
                               SizedBox(
@@ -333,7 +334,7 @@ class DoctorScheduleCard extends StatelessWidget {
                               Text(
                                 'Supprimer',
                                 textScaleFactor: .8,
-                                style: TextStyle(fontSize: 12.0),
+                                style: TextStyle(fontSize: 14.0),
                               ),
                             ],
                           ),

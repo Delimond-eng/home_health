@@ -6,6 +6,7 @@ import 'package:home_health/services/api.dart';
 
 import '../models/nurse.dart';
 import '../models/patient.dart';
+import '../models/report.dart';
 import '../models/schedule.dart';
 
 class ApiManager {
@@ -275,5 +276,30 @@ class ApiManager {
     } else {
       return null;
     }
+  }
+
+  //Voir le raport des visites effectuées
+  static Future<ReportModel> viewReportByNurse(
+      {String key = "all", int? nurseId}) async {
+    var reportModel = ReportModel();
+    //Recupere la session de l'utilisateur courant !
+    var user = authController.user.value;
+    int? nId = nurseId ?? user.id;
+    var response = await Api.request("/nurse.reports/$key/$nId");
+    if (response != null) {
+      reportModel = ReportModel.fromJson(response);
+    }
+    return reportModel;
+  }
+
+  static Future<ReportModel> viewReportByDoctor({String key = "all"}) async {
+    var reportModel = ReportModel();
+    //Recupere la session de l'utilisateur courant !
+    var user = authController.user.value;
+    var response = await Api.request("/doctor.reports/$key/${user.id}");
+    if (response != null) {
+      reportModel = ReportModel.fromJson(response);
+    }
+    return reportModel;
   }
 }

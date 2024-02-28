@@ -17,6 +17,12 @@ class ScheduleNursePage extends StatefulWidget {
 
 class _ScheduleNursePageState extends State<ScheduleNursePage> {
   @override
+  void initState() {
+    super.initState();
+    nurseDataController.refreshSchedule();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Column(
