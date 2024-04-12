@@ -8,10 +8,13 @@ import 'package:home_health/global/controllers.dart';
 import 'package:home_health/views/screens/starting_screen.dart';
 
 import '../../global/storage.dart';
+import '../../utils/costum_modal.dart';
 
 class UserAvatar extends StatelessWidget {
+  final double? size;
   const UserAvatar({
     super.key,
+    this.size,
   });
   @override
   Widget build(BuildContext context) {
@@ -20,7 +23,7 @@ class UserAvatar extends StatelessWidget {
         onSelected: (action) {
           handleMenuAction(context, action);
         },
-        icon: avatar(),
+        icon: avatar(size: size),
         elevation: 15.0,
         shape:
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
@@ -116,17 +119,17 @@ class UserAvatar extends StatelessWidget {
     );
   }
 
-  Widget avatar() {
+  Widget avatar({double? size}) {
     return ZoomIn(
       child: Container(
-        height: 50.0,
-        width: 50.0,
+        height: size ?? 50.0,
+        width: size ?? 50.0,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-          color: Colors.white,
+          color: Colors.indigo.shade50,
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(.2),
+              color: Colors.black.withOpacity(.1),
               blurRadius: 8.0,
               offset: const Offset(0, 3),
             )
@@ -156,15 +159,24 @@ class UserAvatar extends StatelessWidget {
         // Implémentez l'action pour voir le profil
         break;
       case 'loggout':
-        storage.remove("user-data");
-        Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(builder: (context) => const StartingScreen()),
-          (route) => false,
-        );
+        showMessage(context,
+            message: "Voulez-vous vous deconnecter de votre compte ?",
+            onAccepted: () {
+          storage.remove("user-data");
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const StartingScreen(),
+            ),
+            (route) => false,
+          );
+        });
         break;
       case 'exit':
-        exit(0);
+        showMessage(context, message: "Voulez-vous fermer cette application ?",
+            onAccepted: () {
+          exit(0);
+        });
     }
   }
 }

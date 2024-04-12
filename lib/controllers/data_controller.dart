@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:get/get.dart';
 import 'package:home_health/services/api.manger.dart';
 
@@ -14,12 +17,23 @@ class DataController extends GetxController {
   var patients = <Patient>[].obs;
   var allVisits = <Visit>[].obs;
   var reports = <Report>[].obs;
+  var selectedVisit = Visit().obs;
   RxBool dataLoading = RxBool(false);
+
+  final Connectivity _connectivity = Connectivity();
+  late StreamSubscription<ConnectivityResult> _connectivitySubscription;
 
   @override
   void onInit() {
     super.onInit();
-    initDoctorData();
+    _connectivitySubscription =
+        _connectivity.onConnectivityChanged.listen((ConnectivityResult result) {
+      if (result != ConnectivityResult.none) {
+        initDoctorData();
+      } else {
+        dataLoading.value = false;
+      }
+    });
   }
 
   Future initDoctorData() async {

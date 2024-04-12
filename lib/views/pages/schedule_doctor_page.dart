@@ -9,6 +9,7 @@ import '../../models/schedule.dart';
 import '../widgets/empty_loader.dart';
 import '../widgets/login_field.dart';
 import '../widgets/user_avatar.dart';
+import 'subpages/visit_detail_page.dart';
 
 class DoctorSchedulePage extends StatefulWidget {
   const DoctorSchedulePage({super.key});
@@ -350,8 +351,17 @@ class DoctorScheduleCard extends StatelessWidget {
                       child: const Icon(Icons.more_horiz),
                     ),
                     onSelected: (value) {
-                      // Handle menu item selection
-                      print('Selected: $value');
+                      switch (value) {
+                        case 'detail':
+                          dataController.selectedVisit.value = item;
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => const VisitDetailPage(),
+                            ),
+                          );
+                          break;
+                        default:
+                      }
                     },
                   ),
                 ],

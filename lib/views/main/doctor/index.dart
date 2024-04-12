@@ -6,6 +6,7 @@ import 'package:home_health/views/pages/patient_page.dart';
 import 'package:home_health/views/pages/schedule_doctor_page.dart';
 
 import '../../pages/home_doctor_page.dart';
+import '../../pages/profile_page.dart';
 
 class DoctorHome extends StatefulWidget {
   const DoctorHome({super.key});
@@ -20,9 +21,7 @@ class _DoctorHomeState extends State<DoctorHome> {
     const HomeDoctorPage(),
     const PagePatient(),
     const DoctorSchedulePage(),
-    const Center(
-      child: Text("Profil"),
-    ),
+    const ProfilePage(),
   ];
   @override
   Widget build(BuildContext context) {

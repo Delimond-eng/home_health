@@ -6,7 +6,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:home_health/global/controllers.dart';
 import 'package:home_health/services/api.manger.dart';
-import 'package:home_health/views/pages/doctor_report_page.dart';
+import 'package:home_health/views/pages/subpages/doctor_report_page.dart';
 
 import '../../models/nurse.dart';
 

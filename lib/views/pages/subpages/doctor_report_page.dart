@@ -5,10 +5,11 @@ import 'package:get/get.dart';
 import 'package:home_health/global/controllers.dart';
 import 'package:home_health/views/widgets/empty_loader.dart';
 import 'package:home_health/views/widgets/schedule_filter.dart';
-import '../../models/nurse.dart';
-import '../../services/api.manger.dart';
-import '../widgets/report_card.dart';
-import '../widgets/user_avatar.dart';
+import '../../../global/intl_config.dart';
+import '../../../models/nurse.dart';
+import '../../../services/api.manger.dart';
+import '../../widgets/report_card.dart';
+import '../../widgets/user_avatar.dart';
 
 class DoctorReportPage extends StatefulWidget {
   const DoctorReportPage({super.key, this.nurse});
@@ -19,6 +20,15 @@ class DoctorReportPage extends StatefulWidget {
 }
 
 class _DoctorReportPageState extends State<DoctorReportPage> {
+  List<Map<String, dynamic>> intlFilters = [];
+  String selectedIntl = "";
+  bool intlFilterVisibility = false;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -61,20 +71,43 @@ class _DoctorReportPageState extends State<DoctorReportPage> {
                 ScheduleFilter(
                   onSelected: (val) async {
                     var word = translate(val!);
-                    int nurseId = widget.nurse!.id!;
-                    dataController.reports.clear();
-                    dataController.dataLoading.value = true;
-                    var model = await ApiManager.viewReportByNurse(
-                      nurseId: nurseId,
-                      key: word,
-                    );
-                    dataController.dataLoading.value = false;
-                    dataController.reports.value = model.reports!;
+                    if (word == 'all' || word == 'week') {
+                      setState(() {
+                        intlFilterVisibility = false;
+                        selectedIntl = '';
+                      });
+                      int nurseId = widget.nurse!.id!;
+                      dataController.reports.clear();
+                      dataController.dataLoading.value = true;
+                      var model = await ApiManager.viewReportByNurse(
+                        nurseId: nurseId,
+                        key: word,
+                      );
+                      dataController.dataLoading.value = false;
+                      dataController.reports.value = model.reports!;
+                    } else {
+                      if (word == 'day') {
+                        var days = await IntlConfig.days();
+                        setState(() {
+                          intlFilterVisibility = true;
+                          intlFilters = days;
+                        });
+                      } else if (word == 'month') {
+                        var months = await IntlConfig.months();
+                        setState(() {
+                          intlFilterVisibility = true;
+                          intlFilters = months;
+                        });
+                      }
+                    }
                   },
-                )
+                ),
               ],
             ),
           ),
+          if (intlFilterVisibility) ...[
+            _intlFilterWidget(),
+          ],
           Obx(
             () => Expanded(
               child: dataController.reports.isEmpty
@@ -95,6 +128,29 @@ class _DoctorReportPageState extends State<DoctorReportPage> {
             ),
           )
         ],
+      ),
+    );
+  }
+
+  SingleChildScrollView _intlFilterWidget() {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(8.0),
+      scrollDirection: Axis.horizontal,
+      physics: const BouncingScrollPhysics(),
+      child: Row(
+        children: intlFilters
+            .map(
+              (e) => IntlFilterCard(
+                data: e,
+                isActive: selectedIntl.contains(e['code']),
+                onSelected: (v) {
+                  setState(() {
+                    selectedIntl = v;
+                  });
+                },
+              ),
+            )
+            .toList(),
       ),
     );
   }
@@ -190,5 +246,51 @@ class _DoctorReportPageState extends State<DoctorReportPage> {
       default:
         return "all";
     }
+  }
+}
+
+class IntlFilterCard extends StatelessWidget {
+  final Map<String, dynamic> data;
+  final bool isActive;
+  final Function(String value)? onSelected;
+  const IntlFilterCard({
+    super.key,
+    required this.data,
+    this.isActive = false,
+    this.onSelected,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.only(right: 5.0),
+      decoration: BoxDecoration(
+        color: isActive ? Colors.indigo.shade400 : Colors.transparent,
+        border: isActive
+            ? null
+            : Border.all(
+                color: Colors.indigo.shade200,
+              ),
+        borderRadius: BorderRadius.circular(5.0),
+      ),
+      child: Material(
+        borderRadius: BorderRadius.circular(5.0),
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(5.0),
+          onTap: () {
+            onSelected!.call(data['code'].toString());
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              data["label"],
+              textScaleFactor: .8,
+              style: TextStyle(color: isActive ? Colors.white : Colors.black),
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }

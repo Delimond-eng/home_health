@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:get/get.dart';
 import 'package:home_health/global/controllers.dart';
 import 'package:home_health/services/api.manger.dart';
@@ -18,10 +21,21 @@ class NurseDataController extends GetxController {
   RxList<Report> reports = RxList.empty();
   var selectScheduleTreatments = <Treatment>[].obs;
 
+  final Connectivity _connectivity = Connectivity();
+  late StreamSubscription<ConnectivityResult> _connectivitySubscription;
+
   @override
   void onInit() {
     super.onInit();
-    viewHomeData();
+
+    _connectivitySubscription =
+        _connectivity.onConnectivityChanged.listen((ConnectivityResult result) {
+      if (result != ConnectivityResult.none) {
+        viewHomeData();
+      } else {
+        dataController.dataLoading.value = false;
+      }
+    });
   }
 
   Future viewHomeData() async {

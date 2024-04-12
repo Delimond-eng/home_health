@@ -6,6 +6,7 @@ import 'package:home_health/views/widgets/empty_loader.dart';
 
 import '../modals/doctor/create_nurse.dart';
 import '../widgets/app_logo.dart';
+import '../widgets/data_loader.dart';
 import '../widgets/heading_title.dart';
 import '../widgets/menu_btn_action.dart';
 import '../widgets/nurse_card.dart';
@@ -132,27 +133,26 @@ class _HomeDoctorPageState extends State<HomeDoctorPage> {
                       height: 10.0,
                     ),
                     Obx(
-                      () => dataController.nurses.isEmpty
-                          ? const EmptyLoader(
-                              message: "Aucun infirmier répertorié !",
-                            )
-                          : Card(
-                              margin: EdgeInsets.zero,
-                              child: ListView.builder(
-                                shrinkWrap: true,
-                                physics: const NeverScrollableScrollPhysics(),
-                                padding: const EdgeInsets.all(5.0),
-                                itemCount: dataController.nurses.length,
-                                itemBuilder: (context, index) {
-                                  var item = dataController.nurses[index];
-                                  return NurseCard(
-                                    isLast: index ==
-                                        dataController.nurses.length - 1,
-                                    item: item,
-                                  );
-                                },
-                              ),
-                            ),
+                      () => DataLoader(
+                        hasNoData: dataController.nurses.isEmpty,
+                        child: Card(
+                          margin: EdgeInsets.zero,
+                          child: ListView.builder(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            padding: const EdgeInsets.all(5.0),
+                            itemCount: dataController.nurses.length,
+                            itemBuilder: (context, index) {
+                              var item = dataController.nurses[index];
+                              return NurseCard(
+                                isLast:
+                                    index == dataController.nurses.length - 1,
+                                item: item,
+                              );
+                            },
+                          ),
+                        ),
+                      ),
                     )
                   ],
                 ),

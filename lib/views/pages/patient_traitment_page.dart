@@ -192,6 +192,14 @@ class _PatientTraitmentPageState extends State<PatientTraitmentPage> {
                 width: MediaQuery.of(context).size.width,
                 child: SubmitBtnLoader(
                   color: Colors.green,
+                  icon: SvgPicture.asset(
+                    "assets/svg/check-double.svg",
+                    colorFilter: const ColorFilter.mode(
+                      Colors.white,
+                      BlendMode.srcIn,
+                    ),
+                    height: 22.0,
+                  ),
                   isLoading: isLoading,
                   onPressed: () {
                     List<Map<String, dynamic>> data = [];
@@ -238,7 +246,7 @@ class _PatientTraitmentPageState extends State<PatientTraitmentPage> {
         child: Padding(
           padding: const EdgeInsets.all(10.0),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Row(
                 children: [
@@ -313,7 +321,10 @@ class _PatientTraitmentPageState extends State<PatientTraitmentPage> {
                   )
                 ],
               ),
-              if (widget.item.visitStatus != 'completed')
+              if (widget.item.visitStatus != 'completed') ...[
+                const SizedBox(
+                  height: 10.0,
+                ),
                 SizedBox(
                   height: 40.0,
                   width: MediaQuery.of(context).size.width,
@@ -355,6 +366,7 @@ class _PatientTraitmentPageState extends State<PatientTraitmentPage> {
                     ),
                   ),
                 ),
+              ]
             ],
           ),
         ),
@@ -401,10 +413,19 @@ class _PatientTraitmentPageState extends State<PatientTraitmentPage> {
               Align(
                 alignment: Alignment.bottomRight,
                 child: SizedBox(
+                  height: 50.0,
                   width: MediaQuery.of(context).size.width,
                   child: SubmitBtnLoader(
                     color: Colors.green,
                     isLoading: isLoading,
+                    icon: SvgPicture.asset(
+                      "assets/svg/check-double.svg",
+                      colorFilter: const ColorFilter.mode(
+                        Colors.white,
+                        BlendMode.srcIn,
+                      ),
+                      height: 22.0,
+                    ),
                     onPressed: () async {
                       if (txtLibelle.text.isNotEmpty) {
                         setter(() => isLoading = true);
